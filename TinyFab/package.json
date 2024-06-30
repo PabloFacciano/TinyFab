@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest --dom"
   },
   "dependencies": {
+    "happy-dom": "^14.12.3",
     "vue": "^3.4.29"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
-    "vite": "^5.3.1"
+    "@vue/test-utils": "^2.4.6",
+    "vite": "^5.3.1",
+    "vitest": "^1.6.0"
   }
 }
