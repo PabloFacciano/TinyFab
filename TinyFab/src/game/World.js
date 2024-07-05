@@ -1,39 +1,32 @@
+import Transport from './tiles/Transport'
+import Nature from './tiles/Nature'
+
 class World {
-    constructor(width, height) {
-        this.size = { width, height };
-        this.tiles = [];
-        this._initializeTiles();
-    }
+  constructor(width, height) {
+    this.size = { width, height };
+    this.tiles = [];
 
-    _initializeTiles() {
-        const { width, height } = this.size;
-        this.tiles = Array.from({ length: height }, () =>
-            Array.from({ length: width }, () => ({
-                type: 'none',
-                terrain: 'plain',
-                properties: {}
-            }))
-        );
-    }
+    // initialize tiles
+    this.tiles = Array.from({ length: height }, () =>
+      Array.from({ length: width }, () => ({
+        type: 'none',
+        terrain: 'plain',
+        properties: {}
+      }))
+    );
+  }
 
-    getPlainTiles() {
-        return this.tiles.flatMap(row => row.filter(tile => tile.terrain === 'plain'));
-    }
-
-    placeNatureTiles() {
-        const availableTiles = this.getPlainTiles();
-        const randomTile = availableTiles[Math.floor(Math.random() * availableTiles.length)];
-        randomTile.type = 'nature';
-        randomTile.properties = {
-            resource: 'tree',
-            generation: {
-                time: 2,
-                quantity: 3
-            },
-            capacity: 10
-        };
-    }
-
+  runTick() {
+    this.tiles.flat().forEach((tile, index) => {
+      const x = Math.floor(index / this.size.width);
+      const y = index % this.size.width;
+      if (tile.type === 'nature') {
+        Nature.updateTile(tile, this, { x, y });
+      } else if (tile.type == 'transport') {
+        Transport.updateTile(tile, this, { x, y });
+      }
+    });
+  }
 
 }
 
