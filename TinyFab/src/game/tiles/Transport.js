@@ -3,7 +3,7 @@ import WorldUtils from '../WorldUtils'
 function buildTileProperties(transportType, startLocation, endLocation) {
   const transportTypes = {
     "truck": {
-      capacity: 5,
+      capacity: 10,
       velocity: 1
     }
   }
@@ -96,43 +96,38 @@ function _handleStandbyStatus(properties, location) {
 
 function _handleLoadingStatus(tile, world, location) {
   const { properties } = tile;
-
-  // Extraer items de los tiles adyacentes
-  const adjacentTiles = [
-      { x: location.x - 1, y: location.y }, // izquierda
-      { x: location.x + 1, y: location.y }, // derecha
-      { x: location.x, y: location.y - 1 }, // arriba
-      { x: location.x, y: location.y + 1 }  // abajo
+  const tilesToCheck = [
+      { x: location.x - 1, y: location.y },
+      { x: location.x + 1, y: location.y },
+      { x: location.x, y: location.y - 1 },
+      { x: location.x, y: location.y + 1 }
   ];
 
-  adjacentTiles.forEach(({ x, y }) => {
-      if (x >= 0 && x < world.size.width && y >= 0 && y < world.size.height) {
-          const adjacentTile = world.tiles[x][y];
-          if (adjacentTile && adjacentTile.properties && adjacentTile.properties.out && adjacentTile.properties.out.items) {
-              for (const [ item, quantity ] of Object.entries(adjacentTile.properties.out.items)) {
+  const maxItems = tile.properties.in.capacity; // Máximo de items que puede cargar de cada tipo
 
-                  if (!properties.items[item]) {
-                      properties.items[item] = 0;
-                  }
-                  const spaceLeft = properties.in.capacity - Object.values(properties.items).reduce((acc, val) => acc + val, 0);
-                  const amountToLoad = Math.min(quantity, spaceLeft);
-                  properties.items[item] += amountToLoad;
-                  adjacentTile.properties.out.items[item] -= amountToLoad;
-                  if (adjacentTile.properties.out.items[item] === 0) {
-                     delete adjacentTile.properties.out.items[item];
-                  }
+  tilesToCheck.forEach(({ x, y }) => {
+      if (x >= 0 && x < world.size.width && y >= 0 && y < world.size.height) {
+          const neighborTile = world.tiles[x][y];
+          if (neighborTile.properties.out.items) {
+              const items = neighborTile.properties.out.items;
+              if (items) {
+                  Object.keys(items).forEach(itemType => {
+                      const amountToLoad = Math.min(items[itemType], maxItems - (properties.items[itemType] || 0));
+                      if (amountToLoad > 0) {
+                          properties.items[itemType] = (properties.items[itemType] || 0) + amountToLoad;
+                          items[itemType] -= amountToLoad;
+                          if (items[itemType] === 0) {
+                              delete items[itemType];
+                          }
+                      }
+                  });
               }
           }
       }
   });
 
-
-  // Cambiar a 'travelling' si no hay más items para cargar o si se ha alcanzado la capacidad máxima
-  const totalItems = Object.values(properties.items).reduce((acc, val) => acc + val, 0);
-  if (totalItems >= properties.in.capacity || adjacentTiles.every(({ x, y }) => {
-      const adjacentTile = world.tiles[x][y];
-      return !adjacentTile || !adjacentTile.properties || !adjacentTile.properties.out || !adjacentTile.properties.out.items || Object.keys(adjacentTile.properties.out.items).length === 0;
-  })) {
+  // Cambiar a 'travelling' si se han cargado items
+  if (Object.keys(properties.items).length > 0) {
       properties.status = 'travelling';
   }
 }

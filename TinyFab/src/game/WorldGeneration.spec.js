@@ -60,7 +60,7 @@ describe('World Generation', () => {
         // Verificar que todas las propiedades están establecidas con un valor
         expect(transportTile).not.toBeUndefined();
         expect(transportTile.properties).toHaveProperty('transport', 'truck');
-        expect(transportTile.properties).toHaveProperty('in.capacity', 5);
+        expect(transportTile.properties).toHaveProperty('in.capacity', 10);
         expect(transportTile.properties).toHaveProperty('in.location.x', location.x);
         expect(transportTile.properties).toHaveProperty('in.location.y', location.y);
         expect(transportTile.properties).toHaveProperty('out.location.x', destiny.x);
@@ -72,7 +72,7 @@ describe('World Generation', () => {
         // Verificar que la suma de la cantidad de cada item no supera la capacidad total in.capacity
         const items = transportTile.properties.items;
         const totalItems = Object.values(items).reduce((acc, qty) => acc + qty, 0);
-        expect(totalItems).toBeLessThanOrEqual(transportTile.properties.in.capacity);
+        expect(totalItems).toBeLessThanOrEqual(transportTile.properties.in.capacity * Object.keys(items).length);
     
         // Cuando no hay items en items{}, se determina que no se está ocupando el espacio disponible
         if (Object.keys(items).length === 0) {

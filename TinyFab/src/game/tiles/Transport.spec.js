@@ -19,16 +19,16 @@ describe('Tile: Transport', () => {
 
     // Colocar items en tiles adyacentes
     world.tiles[0][1].type = 'resource';
-    world.tiles[0][1].properties = { out: { items: { wood: 3 } } };
+    world.tiles[0][1].properties = { out: { items: { wood: 12 } } };
 
     world.tiles[1][0].type = 'resource';
-    world.tiles[1][0].properties = { out: { items: { stone: 2 } } };
+    world.tiles[1][0].properties = { out: { items: { stone: 15 } } };
 
     world.tiles[1][2].type = 'resource';
-    world.tiles[1][2].properties = { out: { items: { iron: 4 } } };
+    world.tiles[1][2].properties = { out: { items: { iron: 8 } } };
 
     world.tiles[2][1].type = 'resource';
-    world.tiles[2][1].properties = { out: { items: { coal: 1 } } };
+    world.tiles[2][1].properties = { out: { items: { coal: 9 } } };
 
     // Colocar el transporte en la celda central [1,1]
     WorldGeneration.placeTransport(world, location, endLocation);
@@ -36,6 +36,7 @@ describe('Tile: Transport', () => {
     expect(transportTile.properties.status).toBe('standby');
 
     // Imprimir el estado del mundo
+    //console.log("Initial world state:");
     //printWorld(world);
 
     // Ejecutar el tick de actualización
@@ -47,15 +48,16 @@ describe('Tile: Transport', () => {
     // Ejecutar el tick de actualización nuevamente para cargar items
     world.runTick();
 
-    // Verificar que los items hayan sido cargados en el transporte
-    expect(transportTile.properties.items.wood).toBe(3);
-    expect(transportTile.properties.items.coal).toBe(1);
-    expect(transportTile.properties.items.stone).toBe(1);
+    // Verificar que los items hayan sido cargados en el transporte, hasta un máximo de 10 de cada tipo
+    expect(transportTile.properties.items.wood).toBe(10);
+    expect(transportTile.properties.items.coal).toBe(9);
+    expect(transportTile.properties.items.stone).toBe(10);
+    expect(transportTile.properties.items.iron).toBe(8);
 
-    // Verificar que los items hayan sido removidos de los tiles adyacentes
-    expect(world.tiles[0][1].properties.out.items.wood).toBeUndefined();
-    expect(world.tiles[1][0].properties.out.items.stone).toBe(1);
-    expect(world.tiles[1][2].properties.out.items.iron).toBe(4);
+    // Verificar que los items sobrantes se quedan en los tiles adyacentes
+    expect(world.tiles[0][1].properties.out.items.wood).toBe(2); // 12 - 10 = 2
+    expect(world.tiles[1][0].properties.out.items.stone).toBe(5); // 15 - 10 = 5
+    expect(world.tiles[1][2].properties.out.items.iron).toBeUndefined();
     expect(world.tiles[2][1].properties.out.items.coal).toBeUndefined();
 
     // Ejecutar el tick de actualización nuevamente para cambiar el estado a "travelling"
