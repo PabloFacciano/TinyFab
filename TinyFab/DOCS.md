@@ -39,17 +39,26 @@ resource: `tree`, `rock`
 ```
 {
     transport: 'truck',
-    capacity: 1,
-    timeToAction: 5,
-    velocity: 1,
-    startLocation: {
-        x: 0,
-        y: 1
+    in: {
+        capacity: 5,
+        location: {
+            x: 0,
+            y: 1
+        }
     },
-    endLocation: {
-        x: 1,
-        y: 1
-    }
+    out: {
+        location: {
+            x: 1,
+            y: 1
+        }
+    },
+    items: {
+        tree: 2,
+        rock: 3
+        // contains dynamic items, max: capacity
+    },
+    status: 'standby',
+    velocity: 1 // tiles per tick
 }
 ```
 
