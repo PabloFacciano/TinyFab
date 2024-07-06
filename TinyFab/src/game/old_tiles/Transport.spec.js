@@ -1,6 +1,6 @@
-import World from '../World';
-import WorldGeneration from '../WorldGeneration';
-import WorldUtils from '../WorldUtils';
+import World from './World';
+import WorldGeneration from './WorldGeneration';
+import WorldUtils from './WorldUtils';
 import Transport from './Transport';
 
 describe('Tile: Transport', () => {

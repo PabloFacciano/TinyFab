@@ -83,14 +83,28 @@ storage: `heliport`, `parking`, `dock`, `market`, `classic`
 
 building: `office`, `science`
 
-### operations
+### factory
 ```
 {
-    operation: 'fab',
-    capacity: 10,
-    result: ''
-    requiredObject: [],
-    time: 3
+    factory: 'factory',
+    status: 'standby',
+    in: {
+        capacity: 10,
+        requires: {
+            wood: 10,
+            rock: 5
+        }
+    },
+    out: {
+        capacity: 5,
+        time: 3,
+        items: {
+            chair: 1
+        }
+    },
+    items: {
+        ...
+    }
 }
 ```
 

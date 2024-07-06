@@ -1,4 +1,4 @@
-import WorldUtils from '../WorldUtils'
+import WorldUtils from './WorldUtils'
 
 function buildTileProperties(transportType, startLocation, endLocation) {
   const transportTypes = {

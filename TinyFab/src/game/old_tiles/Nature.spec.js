@@ -1,6 +1,6 @@
-import World from '../World';
+import World from './World';
 import Nature from './Nature';
-import WorldGeneration from '../WorldGeneration';
+import WorldGeneration from './WorldGeneration';
 
 describe('Tile: Nature', () => {
   let world;

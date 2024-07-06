@@ -1,33 +1,26 @@
-import Transport from './tiles/Transport'
-import Nature from './tiles/Nature'
-
 class World {
-  constructor(width, height) {
-    this.size = { width, height };
+  constructor() {
     this.tiles = [];
+  }
 
-    // initialize tiles
-    this.tiles = Array.from({ length: height }, () =>
-      Array.from({ length: width }, () => ({
+  createNewWorld(width, height) {
+    this.tiles = Array.from({ length: width }, () =>
+      Array.from({ length: height }, () => ({
         type: 'none',
-        terrain: 'plain',
-        properties: {}
+        terrain: ['plain', 'mountain', 'river'][Math.floor(Math.random() * 3)]
       }))
     );
   }
 
   runTick() {
-    this.tiles.flat().forEach((tile, index) => {
-      const x = Math.floor(index / this.size.width);
-      const y = index % this.size.width;
-      if (tile.type === 'nature') {
-        Nature.updateTile(tile, this, { x, y });
-      } else if (tile.type == 'transport') {
-        Transport.updateTile(tile, this, { x, y });
+    for (let row of this.tiles) {
+      for (let tile of row) {
+        if (tile.type !== 'none') {
+          tile.update(this);
+        }
       }
-    });
+    }
   }
-
 }
 
 export default World;

@@ -1,6 +1,6 @@
 import WorldUtils from './WorldUtils'
-import Nature from './tiles/Nature'
-import Transport from './tiles/Transport'
+import Nature from './Nature'
+import Transport from './Transport'
 
 function placeRandomNatureTile(world){
   const availableTiles = WorldUtils.getPlainTiles(world);

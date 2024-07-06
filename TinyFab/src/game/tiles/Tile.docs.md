@@ -1,5 +1,9 @@
 
-ChatGPT Prompt
+# Tile
+
+## ChatGPT Prompt
+
+```
 
 Escribe el archivo Tile.spec.js y a continuación el archivo Tile.js que implementará las pruebas. Las pruebas deben ejecutarse exitosamente. No se requiere la implementación de un ejemplo de Tile.
 
@@ -75,3 +79,5 @@ Tile no puede ser utilizado directamente, sino que debe ser heredado y ciertas p
 - No contiene lógica predefinida sino que puede implementarse para ejecutar lógica para cancelar la destrucción del tile en caso de darse ciertas condiciones.
 - Si genera una excepción, se cancelará la destrucción del tile (y su consiguiente modificación del mundo).
 
+
+```
