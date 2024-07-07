@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import TransportTile from './TransportTile';
 
 describe('TransportTile', () => {
@@ -72,5 +72,104 @@ describe('TransportTile', () => {
 
         expect(world.tiles[0][3]).toBeNull();
         expect(world.tiles[0][2]).toBe(transportTile); 
+    });
+
+    it('should stay in place if the next step is occupied', () => {
+        const otherTile = new TransportTile(world, { x: 1, y: 0 });
+        world.tiles[0][1] = otherTile;
+
+        transportTile.state.path = [
+            { x: 0, y: 0, in: true, out: false },
+            { x: 1, y: 0, in: false, out: false }
+        ];
+
+        transportTile.update();
+
+        expect(world.tiles[0][0]).toBe(transportTile);
+        expect(world.tiles[0][1]).toBe(otherTile);
+        expect(transportTile.location).toEqual({ x: 0, y: 0 });
+    });
+
+    it('should not move if path is empty', () => {
+        transportTile.state.path = [];
+        transportTile.update();
+        expect(transportTile.location).toEqual({ x: 0, y: 0 });
+        expect(world.tiles[0][0]).toBe(transportTile);
+    });
+
+    it('should handle going backward correctly', () => {
+        transportTile.state.path = [
+            { x: 0, y: 0, in: true, out: false },
+            { x: 1, y: 0, in: false, out: false },
+            { x: 2, y: 0, in: false, out: false }
+        ];
+
+        transportTile.state.goingForward = false;
+        transportTile.location = { x: 2, y: 0 };
+        world.tiles[0][2] = transportTile;
+        world.tiles[0][1] = null;
+
+        transportTile.update();
+
+        expect(world.tiles[0][2]).toBeNull();
+        expect(world.tiles[0][1]).toBe(transportTile);
+    });
+
+    // Nuevas pruebas para mejorar la cobertura
+
+    it('should reverse direction if next step is out of bounds (forward)', () => {
+        transportTile.state.path = [
+            { x: 0, y: 0, in: true, out: false },
+            { x: 1, y: 0, in: false, out: false }
+        ];
+
+        transportTile.state.goingForward = true;
+        transportTile.location = { x: 1, y: 0 };
+        world.tiles[0][1] = transportTile;
+        world.tiles[0][0] = null;
+
+        transportTile.update();
+
+        expect(transportTile.state.goingForward).toBe(false);
+        expect(world.tiles[0][1]).toBeNull();
+        expect(world.tiles[0][0]).toBe(transportTile);
+    });
+
+    it('should reverse direction if next step is out of bounds (backward)', () => {
+        transportTile.state.path = [
+            { x: 0, y: 0, in: true, out: false },
+            { x: 1, y: 0, in: false, out: false }
+        ];
+
+        transportTile.state.goingForward = false;
+        transportTile.location = { x: 0, y: 0 };
+        world.tiles[0][0] = transportTile;
+
+        transportTile.update();
+
+        expect(transportTile.state.goingForward).toBe(true);
+        expect(world.tiles[0][0]).toBeNull();
+        expect(world.tiles[0][1]).toBe(transportTile);
+    });
+
+    // Nueva prueba para línea 63
+    it('should log when next position is not empty', () => {
+        const otherTile = new TransportTile(world, { x: 1, y: 0 });
+        world.tiles[0][1] = otherTile;
+
+        transportTile.state.path = [
+            { x: 0, y: 0, in: true, out: false },
+            { x: 1, y: 0, in: false, out: false }
+        ];
+
+        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+        transportTile.update();
+
+        expect(consoleSpy).toHaveBeenCalledWith('Position (1, 0) is not empty');
+        consoleSpy.mockRestore();
+
+        expect(world.tiles[0][0]).toBe(transportTile);
+        expect(world.tiles[0][1]).toBe(otherTile);
+        expect(transportTile.location).toEqual({ x: 0, y: 0 });
     });
 });

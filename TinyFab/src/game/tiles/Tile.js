@@ -56,7 +56,7 @@ export class Tile {
             );
 
             if (transferAmount > 0) {
-              this.itemsIn[item] = (this.itemsIn[item] || 0) + transferAmount;
+              this.itemsIn[item] = (this.itemsIn[item] || 0) + transferAmount; 
               neighborTile.itemsOut[item] -= transferAmount;
             }
           }

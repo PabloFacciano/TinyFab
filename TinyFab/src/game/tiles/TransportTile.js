@@ -13,12 +13,12 @@ class TransportTile extends Tile {
         return 'transport';
     }
 
-    static get acceptItems() {
-        return {};
-    }
-
     static get cost() {
         return { wood: 4, rock: 2 };
+    }
+
+    static get acceptItems() {
+        return {};
     }
 
     exportInputs() {
@@ -32,41 +32,36 @@ class TransportTile extends Tile {
     }
 
     update() {
-        const path = this.state.path;
+        const { path, goingForward } = this.state;
         if (path.length === 0) return;
 
-        const currentIndex = path.findIndex(step => step.x === this.location.x && step.y === this.location.y);
-        let newIndex = this.state.goingForward ? currentIndex + 1 : currentIndex - 1;
+        const currentIndex = path.findIndex(p => p.x === this.location.x && p.y === this.location.y);
+        if (currentIndex === -1) return;
 
-        if (newIndex >= path.length) {
-            this.state.goingForward = false;
-            newIndex = path.length - 2; // Ajuste aquí
-        } else if (newIndex < 0) {
-            this.state.goingForward = true;
-            newIndex = 1; // Ajuste aquí
-        }
-
-        const nextStep = path[newIndex];
-        //console.log(`Moving from (${this.location.x}, ${this.location.y}) to (${nextStep.x}, ${nextStep.y})`);
-
-        if (this.world.tiles[nextStep.y][nextStep.x] === null) {
-            //console.log(`Position (${nextStep.x}, ${nextStep.y}) is empty. Moving tile.`);
-            this.world.tiles[this.location.y][this.location.x] = null;
-            this.location = { x: nextStep.x, y: nextStep.y };
-            this.world.tiles[this.location.y][this.location.x] = this;
-
-            if (nextStep.in) {
-                this.acceptInputs();
-            }
-
-            if (nextStep.out) {
-                this.exportInputs();
-            } else {
-                this.dontExportInputs();
+        let nextIndex;
+        if (goingForward) {
+            nextIndex = currentIndex + 1;
+            if (nextIndex >= path.length) {
+                this.state.goingForward = false;
+                nextIndex = currentIndex - 1;
             }
         } else {
-            //console.log(`Position (${nextStep.x}, ${nextStep.y}) is not empty`);
+            nextIndex = currentIndex - 1;
+            if (nextIndex < 0) {
+                this.state.goingForward = true;
+                nextIndex = currentIndex + 1;
+            }
         }
+
+        const nextStep = path[nextIndex];
+        if (this.world.tiles[nextStep.y][nextStep.x] !== null) {
+            console.log(`Position (${nextStep.x}, ${nextStep.y}) is not empty`);
+            return;
+        }
+
+        this.world.tiles[this.location.y][this.location.x] = null;
+        this.location = { x: nextStep.x, y: nextStep.y };
+        this.world.tiles[nextStep.y][nextStep.x] = this;
     }
 }
 
