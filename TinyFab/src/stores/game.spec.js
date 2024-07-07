@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { useGameStore } from './Game';
-import World from '../game/World';
 
 describe('Game Store', () => {
   beforeEach(() => {
@@ -17,4 +16,16 @@ describe('Game Store', () => {
     expect(store.world.height).toBe(40);
   });
   
+  it('should initialize world with some default tiles', () => {
+    const store = useGameStore();
+    store.initializeWorld(30, 40);
+    
+    // world.tiles must have at least 1 Nature tile for each 10x10 tiles
+
+    // How to add a NatureTile
+    //  import NatureTile from '../game/tiles/NatureTile'
+    //  world.tiles[location.x][location.y] = new NatureTile(world, location);
+
+  });
+
 });

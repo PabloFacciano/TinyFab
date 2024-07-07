@@ -1,9 +1,18 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import './style.css'
+import { useGameStore } from './stores/game';
+import './style.css'; 
 
-const pinia = createPinia();
 const app = createApp(App);
+
+// Create a Pinia instance
+const pinia = createPinia();
 app.use(pinia);
+
+// Mount the app
 app.mount('#app');
+
+// Use the store and initialize the world
+const store = useGameStore();
+store.initializeWorld(30, 40); // Or whatever dimensions you need
