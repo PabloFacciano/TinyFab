@@ -16,56 +16,60 @@ tile.cost = {
     wood: 4,
     rock: 2
 }
-tile.itemsIn = {} // none
-tile.acceptItems = {}
+tile.itemsIn = {}
+tile.itemsOut = {}
+tile.acceptItems = {} // user-selected after built
 tile.state: {
     path: [
-        { x: 0, y: 0},
-        { x: 1, y: 0},
+        { x: 0, y: 0, in: true, out: false},
+        { x: 1, y: 0, in: false, out: false},
         ...
+        { x: 2, y: 0, in: false, out: false},
+        { x: 3, y: 0, in: false, out: true},
     ],
-    acceptItemsWhileMoving: true, // if false, super.
-
+    goingForward: true
 }
 
+tile.state.path sólo puede contener tiles vacíos del mundo, excluyendo el tile actual.
+Además, las posiciones xy deben estar dentro de los limites del mundo (World.widht/height).
 
-
-
-
-
-
-tile.type = 'nature' 
-tile.cost = {} // none
-tile.itemsIn = {} // none
-tile.acceptItems = {} // none
-tile.state = {
-    generation: {
-        resource: `wood`, // Valor aleatorio entre `wood`, `stone`, `coal`, `iron`
-        ticks: 3, // Número aleatorio entre 1 y 10.
-        ammount: 2, // Número aleatorio entre 1 y 10.
-        capacity: 50 // Número aleatorio entre 10 y 50.
-    },
-    ticksRunning: 0
-}
-tile.itemsOut = { 
-    wood: 0 // Definición: [generation.resource]: 0
-}
 
 # Métodos
 
-setup(...){
-    // Sin modificaciones
-}
-
-update(world){
+exportInputs(){
     /*
-    1. ticksRunning > generation.ticks? Aumentar itemsOut[resource] en generation.ammount y restablecer ticksRunning a cero
-    2. Limitar itemsOut a máximo generation.capacity
+    Mueve los items almacenados en this.itemsIn a this.itemsOut;
+    */
+}
+dontExportInputs(){
+    /*
+    Mueve los items almacenados en this.itemsOut a this.itemsIn;
     */
 }
 
-destroy(...){
-    // Sin modificaciones
+update(world){
+    /*    
+    Cada objeto dentro de path, se llamará step.
+
+    Si this.location no es un step dentro de this.path (X,Y), mover el tile actual a la posicion del primer step.
+
+    Mover el tile actual al siguiente step del path (goingForward == true, siguiente step, de lo contrario, el anterior).
+
+    Sólo se puede mover al siguiente/anterior step en caso de que la celda esté vacía (== null).
+
+    El transporte debe moverse dentro del mundo (Word.tiles).
+
+    Si step.in == true, ejecuta this.acceptInputs();
+
+    Si step.out == true, ejecuta this.exportInputs(); de lo contrario, ejecuta this.dontExportInputs();
+    
+    Si llegó al final, comenzar a ir en reversa, cambiando goingForward to false.
+
+    Al llegar al inicio, cambiar goingForward to true.
+
+    En cada update del mundo, el tile actual sólo puede desplazarse una posición a la vez. Es decir, no pueden realizarse movimientos sucesivos para el mismo World.runTick() que actualiza cada Tile.
+
+    */
 }
 
 ```
