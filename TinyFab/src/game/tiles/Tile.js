@@ -73,18 +73,19 @@ export default class Tile {
 
       if (newX >= 0 && newY >= 0 && newX < world.tiles.length && newY < world.tiles[0].length) {
         const neighbor = world.tiles[newX][newY];
+        if (!(neighbor instanceof Tile)) return;
 
-        if (neighbor instanceof Tile) {
-          for (const item in neighbor.itemsOut) {
-            if (this.constructor.acceptedItems[item]) {
-              const availableSpace = this.constructor.acceptedItems[item] - (this.itemsIn[item] || 0);
-              if (availableSpace > 0) {
-                const transferAmount = Math.min(availableSpace, neighbor.itemsOut[item]);
-                this.itemsIn[item] = (this.itemsIn[item] || 0) + transferAmount;
-                neighbor.itemsOut[item] -= transferAmount;
-              }
-            }
-          }
+
+        for (const item in neighbor.itemsOut) {
+          if (!(this.constructor.acceptedItems[item])) continue;
+
+          const availableSpace = this.constructor.acceptedItems[item] - (this.itemsIn[item] || 0);
+          if (availableSpace <= 0) continue;
+          
+          const transferAmount = Math.min(availableSpace, neighbor.itemsOut[item]);
+          this.itemsIn[item] = (this.itemsIn[item] || 0) + transferAmount;
+          neighbor.itemsOut[item] -= transferAmount;
+            
         }
       }
     });
