@@ -12,7 +12,7 @@ class World {
       return this.terrain.length > 0 ? this.terrain[0].length : 0;
   }
 
-  createNewWorld(width, height) {
+  create(width, height) {
       const types = ['plain', 'mountain', 'river'];
       this.terrain = Array.from({ length: width }, () =>
           Array.from({ length: height }, () => ({
