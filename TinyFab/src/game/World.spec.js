@@ -1,40 +1,56 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import World from './World';
-import NatureTile from './tiles/NatureTile';
 
 describe('World', () => {
-  let world;
+    let world;
 
-  beforeEach(() => {
-    world = new World();
-  });
+    beforeEach(() => {
+        world = new World();
+    });
 
-  it('should initialize with an empty tiles array', () => {
-    expect(world.tiles).toEqual([]);
-  });
+    it('should initialize terrain and tiles as empty arrays', () => {
+        expect(world.terrain).toEqual([]);
+        expect(world.tiles).toEqual([]);
+    });
 
-  it('should create a new world with the given dimensions', () => {
-    world.createNewWorld(3, 3);
-    expect(world.tiles.length).toBe(3);
-    expect(world.tiles[0].length).toBe(3);
-    expect(world.tiles[0][0].type).toBe('none');
-    const terrains = ['plain', 'mountain', 'river'];
-    expect(terrains).toContain(world.tiles[0][0].terrain);
-  });
+    it('should return correct width', () => {
+        world.createNewWorld(5, 4);
+        expect(world.width).toBe(5);
+    });
 
-  it('should run tick and update all non-empty tiles', () => {
-    world.createNewWorld(2, 2);
+    it('should return correct height when terrain is not empty', () => {
+        world.createNewWorld(5, 4);
+        expect(world.height).toBe(4);
+    });
 
-    // Manually set some tiles to non-empty
-    world.tiles[1][1] = new NatureTile('plain');
+    it('should return height as 0 when terrain is empty', () => {
+        expect(world.height).toBe(0);
+    });
 
-    const spy = vi.spyOn(NatureTile.prototype, 'update');
+    it('should create new world with given width and height', () => {
+        world.createNewWorld(2, 3);
+        expect(world.terrain.length).toBe(2);
+        expect(world.terrain[0].length).toBe(3);
+        expect(world.tiles.length).toBe(2);
+        expect(world.tiles[0].length).toBe(3);
+    });
 
-    world.runTick();
+    it('should fill terrain with objects containing type as plain, mountain or river', () => {
+        world.createNewWorld(3, 3);
+        for (let row of world.terrain) {
+            for (let cell of row) {
+                expect(['plain', 'mountain', 'river']).toContain(cell.type);
+            }
+        }
+    });
 
-    // Only one tile should be updated
-    expect(spy).toHaveBeenCalledTimes(1);
-
-    spy.mockRestore();
-  });
+    it('should run update on non-null tiles', () => {
+        const mockTile = {
+            update: vi.fn(),
+        };
+        world.createNewWorld(2, 2);
+        world.tiles[0][0] = mockTile;
+        world.runTick();
+        expect(mockTile.update).toHaveBeenCalled();
+    });
 });

@@ -1,25 +1,37 @@
 class World {
   constructor() {
-    this.tiles = [];
+      this.terrain = [];
+      this.tiles = [];
+  }
+
+  get width() {
+      return this.terrain.length;
+  }
+
+  get height() {
+      return this.terrain.length > 0 ? this.terrain[0].length : 0;
   }
 
   createNewWorld(width, height) {
-    this.tiles = Array.from({ length: width }, () =>
-      Array.from({ length: height }, () => ({
-        type: 'none',
-        terrain: ['plain', 'mountain', 'river'][Math.floor(Math.random() * 3)]
-      }))
-    );
+      const types = ['plain', 'mountain', 'river'];
+      this.terrain = Array.from({ length: width }, () =>
+          Array.from({ length: height }, () => ({
+              type: types[Math.floor(Math.random() * types.length)],
+          }))
+      );
+      this.tiles = Array.from({ length: width }, () =>
+          Array.from({ length: height }, () => null)
+      );
   }
 
   runTick() {
-    for (let row of this.tiles) {
-      for (let tile of row) {
-        if (tile.type !== 'none') {
-          tile.update(this);
-        }
+      for (let x = 0; x < this.tiles.length; x++) {
+          for (let y = 0; y < this.tiles[x].length; y++) {
+              if (this.tiles[x][y] !== null) {
+                  this.tiles[x][y].update();
+              }
+          }
       }
-    }
   }
 }
 

@@ -1,50 +1,54 @@
-import Tile from './Tile';
+import { Tile } from './Tile';
 
-function getRandomValue(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export default class NatureTile extends Tile {
-  constructor(terrain) {
-    super(terrain);
-    this.type = 'nature';
-    this.itemsIn = {};
+export class NatureTile extends Tile {
+  constructor(world, location) {
+    super(world, location);
     this.state = {
       generation: {
-        resource: getRandomValue(['wood', 'stone', 'coal', 'iron']),
-        ticks: getRandomInt(1, 10),
-        ammount: getRandomInt(1, 10),
-        capacity: getRandomInt(10, 50)
+        resource: NatureTile.randomResource(),
+        ticks: NatureTile.randomNumber(1, 10),
+        ammount: NatureTile.randomNumber(1, 10),
+        capacity: NatureTile.randomNumber(10, 50)
       },
       ticksRunning: 0
     };
-
-    this.itemsOut = {
-      [this.state.generation.resource]: 0
+    this.itemsOut = { 
+      [this.state.generation.resource]: 0 
     };
   }
 
-  setup(world, tileLocation) {
-    super.setup(world, tileLocation);
+  static get type() {
+    return 'nature';
   }
 
-  update(world) {
+  static get cost() {
+    return { wood: 5 };
+  }
+
+  static get acceptItems() {
+    return {};
+  }
+
+  static randomResource() {
+    const resources = ['wood', 'stone', 'coal', 'iron'];
+    return resources[Math.floor(Math.random() * resources.length)];
+  }
+
+  static randomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  update() {
+    const { resource, ticks, ammount, capacity } = this.state.generation;
     this.state.ticksRunning++;
-    
-    if (this.state.ticksRunning < this.state.generation.ticks) return;
 
-    let { resource, capacity, ammount } = this.state.generation;
+    if (this.state.ticksRunning > ticks) {
+      this.itemsOut[resource] += ammount;
+      this.state.ticksRunning = 0;
+    }
 
-    this.itemsOut[resource] = Math.min(this.itemsOut[resource] + ammount, capacity);
-    this.state.ticksRunning = 0;
-    
-  }
-
-  destroy(world) {
-    super.destroy(world);
+    if (this.itemsOut[resource] > capacity) {
+      this.itemsOut[resource] = capacity;
+    }
   }
 }

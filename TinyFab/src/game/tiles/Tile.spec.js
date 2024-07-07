@@ -1,77 +1,68 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import Tile from './Tile';
+import { Tile } from './Tile';
+
+class TestTile extends Tile {
+  static get type() { 
+    return 'TestTile'; 
+  }
+
+  static get acceptItems() { 
+    return { 'wood': 10, 'stone': 5 }; 
+  }
+
+  static get cost() { 
+    return { 'wood': 2, 'stone': 2 }; 
+  }
+
+  update() {
+    this.state = { status: 'updated' };
+  }
+}
 
 describe('Tile', () => {
-  let world;
+  let world, location, tile;
 
   beforeEach(() => {
-    world = {
-      tiles: [
-        [{ terrain: 'plain' }, { terrain: 'plain' }],
-        [{ terrain: 'mountain' }, { terrain: 'water' }]
-      ],
-      itemsStorage: {
-        wood: 10,
-        rock: 5
-      }
-    };
+    world = { tiles: [[null, null], [null, null]] };
+    location = { x: 0, y: 0 };
+    tile = new TestTile(world, location);
   });
 
-  it('should not be instantiable directly', () => {
-    expect(() => new Tile('plain')).toThrow('Tile cannot be instantiated directly');
+  it('should throw an error when trying to instantiate Tile directly', () => {
+    expect(() => new Tile(world, location)).toThrowError("Tile is an abstract class and cannot be instantiated directly.");
   });
 
-  it('should throw an error if setup is called on non-plain terrain', () => {
-    class TestTile extends Tile {
-      constructor() {
-        super('mountain');
-      }
-
-      static cost = { wood: 3 };
-      static acceptedItems = { wood: 10, rock: 5 };
-
-      setup(world, tileLocation) {
-        super.setup(world, tileLocation);
-      }
-    }
-
-    const testTile = new TestTile();
-    expect(() => testTile.setup(world, { x: 1, y: 0 })).toThrow('Tile cannot be built on this terrain');
+  it('should have correct type', () => {
+    expect(TestTile.type).toBe('TestTile');
   });
 
-  it('should throw an error if setup is called without sufficient resources', () => {
-    class TestTile extends Tile {
-      constructor() {
-        super('plain');
-      }
-
-      static cost = { wood: 20 };
-      static acceptedItems = { wood: 10, rock: 5 };
-
-      setup(world, tileLocation) {
-        super.setup(world, tileLocation);
-      }
-    }
-
-    const testTile = new TestTile();
-    expect(() => testTile.setup(world, { x: 0, y: 0 })).toThrow('Not enough resources to build the tile');
+  it('should have correct acceptItems', () => {
+    expect(TestTile.acceptItems).toEqual({ 'wood': 10, 'stone': 5 });
   });
 
-  it('should successfully setup if conditions are met', () => {
-    class TestTile extends Tile {
-      constructor() {
-        super('plain');
-      }
+  it('should have correct cost', () => {
+    expect(TestTile.cost).toEqual({ 'wood': 2, 'stone': 2 });
+  });
 
-      static cost = { wood: 3 };
-      static acceptedItems = { wood: 10, rock: 5 };
+  it('should combine acceptItems, itemsIn, and itemsOut in itemList', () => {
+    tile.itemsIn = { 'wood': 3 };
+    tile.itemsOut = { 'stone': 2 };
+    expect(tile.itemList).toEqual({ 'wood': 13, 'stone': 7 });
+  });
 
-      setup(world, tileLocation) {
-        super.setup(world, tileLocation);
-      }
-    }
+  it('should transfer items from neighboring tiles during acceptInputs', () => {
+    const neighborTile = new TestTile(world, { x: 0, y: 1 });
+    neighborTile.itemsOut = { 'wood': 5, 'stone': 3 };
+    world.tiles[0][1] = neighborTile;
 
-    const testTile = new TestTile();
-    expect(() => testTile.setup(world, { x: 0, y: 0 })).not.toThrow();
+    tile.acceptInputs();
+
+    expect(tile.itemsIn).toEqual({ 'wood': 5, 'stone': 3 });
+    expect(neighborTile.itemsOut).toEqual({ 'wood': 0, 'stone': 0 });
+  });
+
+  it('should call the update method and change state', () => {
+    tile.update();
+    expect(tile.state).toEqual({ status: 'updated' });
   });
 });

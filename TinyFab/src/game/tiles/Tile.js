@@ -1,97 +1,71 @@
-export default class Tile {
-  constructor(terrain) {
+export class Tile {
+  constructor(world, location) {
     if (new.target === Tile) {
-      throw new Error('Tile cannot be instantiated directly');
+      throw new Error("Tile is an abstract class and cannot be instantiated directly.");
     }
-    this._terrain = terrain;
+    
+    this.world = world;
+    this.location = location;
     this.itemsIn = {};
     this.itemsOut = {};
     this.state = {};
   }
 
-  get terrain() {
-    return this._terrain;
+  static get type() {
+    throw new Error("Type getter must be implemented by subclass");
+  }
+
+  static get acceptItems() {
+    throw new Error("AcceptItems getter must be implemented by subclass");
+  }
+
+  static get cost() {
+    throw new Error("Cost getter must be implemented by subclass");
   }
 
   get itemList() {
-    const itemList = {};
-
-    for (const key in this.constructor.acceptedItems) {
-      itemList[key] = 0;
+    const items = { ...this.constructor.acceptItems };
+    for (let key in this.itemsIn) {
+      items[key] = (items[key] || 0) + this.itemsIn[key];
     }
-
-    for (const key in this.itemsIn) {
-      itemList[key] = this.itemsIn[key];
+    for (let key in this.itemsOut) {
+      items[key] = (items[key] || 0) + this.itemsOut[key];
     }
-
-    for (const key in this.itemsOut) {
-      itemList[key] = this.itemsOut[key];
-    }
-
-    return itemList;
+    return items;
   }
 
-  setup(world, tileLocation) {
-    const { x, y } = tileLocation;
-    const tile = world.tiles[x][y];
-
-    if (tile.terrain !== 'plain') {
-      throw new Error('Tile cannot be built on this terrain');
-    }
-
-    const cost = this.constructor.cost;
-
-    for (const item in cost) {
-      if (!world.itemsStorage[item] || world.itemsStorage[item] < cost[item]) {
-        throw new Error('Not enough resources to build the tile');
-      }
-    }
-
-    // Deduct the cost from world itemsStorage
-    for (const item in cost) {
-      world.itemsStorage[item] -= cost[item];
-    }
-
-    // Set up the tile in the world
-    world.tiles[x][y] = this;
-  }
-
-  update(world) {
-    // Default update logic to be extended
+  acceptInputs() {
     const directions = [
-      { x: -1, y: 0 },
-      { x: 1, y: 0 },
       { x: 0, y: -1 },
-      { x: 0, y: 1 }
+      { x: 0, y: 1 },
+      { x: -1, y: 0 },
+      { x: 1, y: 0 }
     ];
 
-    const { x, y } = this.location;
+    for (let dir of directions) {
+      const neighborX = this.location.x + dir.x;
+      const neighborY = this.location.y + dir.y;
+      const neighborTile = this.world.tiles[neighborX] && this.world.tiles[neighborX][neighborY];
 
-    directions.forEach(dir => {
-      const newX = x + dir.x;
-      const newY = y + dir.y;
+      if (neighborTile) {
+        for (let item in neighborTile.itemsOut) {
+          if (this.constructor.acceptItems[item]) {
+            const transferAmount = Math.min(
+              neighborTile.itemsOut[item],
+              this.constructor.acceptItems[item] - (this.itemsIn[item] || 0)
+            );
 
-      if (newX >= 0 && newY >= 0 && newX < world.tiles.length && newY < world.tiles[0].length) {
-        const neighbor = world.tiles[newX][newY];
-        if (!(neighbor instanceof Tile)) return;
-
-
-        for (const item in neighbor.itemsOut) {
-          if (!(this.constructor.acceptedItems[item])) continue;
-
-          const availableSpace = this.constructor.acceptedItems[item] - (this.itemsIn[item] || 0);
-          if (availableSpace <= 0) continue;
-          
-          const transferAmount = Math.min(availableSpace, neighbor.itemsOut[item]);
-          this.itemsIn[item] = (this.itemsIn[item] || 0) + transferAmount;
-          neighbor.itemsOut[item] -= transferAmount;
-            
+            if (transferAmount > 0) {
+              this.itemsIn[item] = (this.itemsIn[item] || 0) + transferAmount;
+              neighborTile.itemsOut[item] -= transferAmount;
+            }
+          }
         }
       }
-    });
+    }
   }
 
-  destroy(world) {
-    // Custom logic for destruction can be implemented in subclasses
+  update() {
+    throw new Error("Update method must be implemented by subclass");
   }
 }

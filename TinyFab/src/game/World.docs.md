@@ -9,21 +9,28 @@ Escribe el archivo World.spec.js y a continuación el archivo World.js que imple
 
 # Propiedades
 
+## terrain
+Es un array bidimensional. Cada celda contiene un objeto así:
+{
+    type: 'plain' // Valor aleatorio entre: 'plain', 'mountain', 'river'
+}
+
 ## tiles
-Es un array bidimensional de elementos de implementaciones de la clase Tile.
+Es un array bidimensional. Cada celda se inicializa en null.
 
+## width
+Devuelve this.terrain.lenght
 
+## height
+Devuelve this.terrain[0].lenght en caso de que haya al menos un elemento diposnible. 
+De lo contrario, devuelve 0.
 
 # Metodos
 
 ## createNewWorld(width, height)
-Llena el array this.tile[width][height] con un mapa vacío de tiles: 
-{ 
-    type: 'none',
-    terrain: 'plain' // Valor aleatorio entre: 'plain', 'mountain', 'river'
-}
+Llena this.terrain y this.tiles con el tamaño y contenido indicado anteriormente.
 
 ## runTick()
-Deberá ejecutar tile.update(this) en cada tile guardado en this.tiles, siempre y cuando el tile no esté vacío (type != none).
-
+Recorre cada celda de this.tiles.
+Si la celda no es null, ejecuta this.tile[x,y].update()
 ```
