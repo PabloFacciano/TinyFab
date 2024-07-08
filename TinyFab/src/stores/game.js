@@ -1,6 +1,7 @@
 // Game.js
 import { defineStore } from 'pinia';
 import World from '../game/World';
+import PerlinNoise from '../game/PerlinNoise';
 
 export const useGameStore = defineStore('game', {
   state: () => ({
@@ -8,8 +9,10 @@ export const useGameStore = defineStore('game', {
   }),
   actions: {
     initializeWorld(width, height) {
-      this.world = new World();
-      this.world.create(width, height)
+      const perlinNoise = new PerlinNoise();
+      let wrl =  new World(perlinNoise);
+      wrl.create(width, height)
+      this.world = wrl;
     },
   },
 });

@@ -1,11 +1,15 @@
+// World.spec.js
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import World from './World';
+import PerlinNoise from './PerlinNoise';
 
 describe('World', () => {
     let world;
+    let perlinNoise;
 
     beforeEach(() => {
-        world = new World();
+        perlinNoise = new PerlinNoise();
+        world = new World(perlinNoise);
     });
 
     it('should initialize terrain and tiles as empty arrays', () => {

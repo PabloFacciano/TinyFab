@@ -1,38 +1,50 @@
+// World.js
+import PerlinNoise from './PerlinNoise';
+
 class World {
-  constructor() {
-      this.terrain = [];
-      this.tiles = [];
-  }
+    constructor(perlinNoise) {
+        this.perlinNoise = perlinNoise;
+        this.terrain = [];
+        this.tiles = [];
+    }
 
-  get width() {
-      return this.terrain.length;
-  }
+    create(width, height) {
+        this.terrain = Array.from({ length: width }, () => Array.from({ length: height }, () => ({})));
+        this.tiles = Array.from({ length: width }, () => Array.from({ length: height }, () => null));
 
-  get height() {
-      return this.terrain.length > 0 ? this.terrain[0].length : 0;
-  }
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                const value = this.perlinNoise.generate(x / width , y / height);
+                let type;
+                if (value < 0.40) {
+                    type = 'river';
+                } else if (value < 0.60) {
+                    type = 'plain';
+                } else {
+                    type = 'mountain';
+                }
+                this.terrain[x][y] = { type, elevation: value };
+            }
+        }
+    }
 
-  create(width, height) {
-      const types = ['plain', 'mountain', 'river'];
-      this.terrain = Array.from({ length: width }, () =>
-          Array.from({ length: height }, () => ({
-              type: types[Math.floor(Math.random() * types.length)],
-          }))
-      );
-      this.tiles = Array.from({ length: width }, () =>
-          Array.from({ length: height }, () => null)
-      );
-  }
+    get width() {
+        return this.terrain.length;
+    }
 
-  runTick() {
-      for (let x = 0; x < this.tiles.length; x++) {
-          for (let y = 0; y < this.tiles[x].length; y++) {
-              if (this.tiles[x][y] !== null) {
-                  this.tiles[x][y].update();
-              }
-          }
-      }
-  }
+    get height() {
+        return this.terrain.length ? this.terrain[0].length : 0;
+    }
+
+    runTick() {
+        for (let row of this.tiles) {
+            for (let tile of row) {
+                if (tile) {
+                    tile.update();
+                }
+            }
+        }
+    }
 }
 
 export default World;
