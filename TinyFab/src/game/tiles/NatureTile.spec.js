@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { NatureTile } from './NatureTile';
+import NatureTile from './NatureTile';
 import { Tile } from './Tile';
 
 describe('NatureTile', () => {

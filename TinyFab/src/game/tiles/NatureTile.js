@@ -1,6 +1,6 @@
 import { Tile } from './Tile';
 
-export class NatureTile extends Tile {
+export default class NatureTile extends Tile {
   constructor(world, location) {
     super(world, location);
     this.state = {
