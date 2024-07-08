@@ -15,4 +15,4 @@ app.mount('#app');
 
 // Use the store and initialize the world
 const store = useGameStore();
-store.initializeWorld(30, 40); // Or whatever dimensions you need
+store.initializeWorld(50, 100); // Or whatever dimensions you need
