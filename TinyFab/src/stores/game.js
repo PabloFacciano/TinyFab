@@ -9,10 +9,11 @@ export const useGameStore = defineStore('game', {
   }),
   actions: {
     initializeWorld(width, height) {
-      const perlinNoise = new PerlinNoise();
+      let perlinNoise = new PerlinNoise();
       let wrl =  new World(perlinNoise);
       wrl.create(width, height)
       this.world = wrl;
+      perlinNoise = null;
     },
   },
 });

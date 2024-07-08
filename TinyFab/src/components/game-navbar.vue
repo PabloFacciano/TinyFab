@@ -1,12 +1,12 @@
 <template>
   <div 
   class="
-    text-center p-2
+    text-center p-2 flex justify-between content-middle
     border-b-2 border-indigo-500
     /* light mode */ bg-zinc-200 
     /* dark mode */ dark:bg-zinc-800 text-zinc-200 
   ">
-    <button @click="NewMap()">New Map</button>
+    <button class="border-2 border-indigo-500 rounded p-2" @click="NewMap()">New Map</button>
     <div>150 Coins</div>
   </div>
 </template>
@@ -18,10 +18,9 @@ export default {
   methods: {
     NewMap() {
       const gameStore = useGameStore();
-      let size = Math.floor(Math.random() * (50 - 10 + 1)) + 10
       return gameStore?.initializeWorld(
-        size,
-        size * 2
+        gameStore.world.width,
+        gameStore.world.height
       );
     },
   }
