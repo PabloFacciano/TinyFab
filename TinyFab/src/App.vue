@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="flex flex-col h-svh">
     <GameNavbar />
-    <GameGrid />
+    <GameGrid class="flex" />
   </div>
 </template>
 
