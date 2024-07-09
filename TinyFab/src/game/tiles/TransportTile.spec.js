@@ -152,24 +152,4 @@ describe('TransportTile', () => {
         expect(world.tiles[0][1]).toBe(transportTile);
     });
 
-    // Nueva prueba para línea 63
-    it('should log when next position is not empty', () => {
-        const otherTile = new TransportTile(world, { x: 1, y: 0 });
-        world.tiles[0][1] = otherTile;
-
-        transportTile.state.path = [
-            { x: 0, y: 0, in: true, out: false },
-            { x: 1, y: 0, in: false, out: false }
-        ];
-
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-        transportTile.update();
-
-        expect(consoleSpy).toHaveBeenCalledWith('Position (1, 0) is not empty');
-        consoleSpy.mockRestore();
-
-        expect(world.tiles[0][0]).toBe(transportTile);
-        expect(world.tiles[0][1]).toBe(otherTile);
-        expect(transportTile.location).toEqual({ x: 0, y: 0 });
-    });
 });

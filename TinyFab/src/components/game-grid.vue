@@ -7,10 +7,10 @@
        @mouseleave="endDrag">
 
     <!-- Tiles -->
-    <div class="flex flex-col content"
+    <div class="flex content"
          :style="contentStyle"
          :class="contentClass">
-      <div class="flex" v-for="(row, rowIndex) in tiles" :key="`row-${rowIndex}`">
+      <div class="flex flex-col" v-for="(row, rowIndex) in tiles" :key="`row-${rowIndex}`">
         <GameGridTile v-for="(tile, colIndex) in row" :key="`tile-${rowIndex}-${colIndex}`" :tile="tile"
           :terrain="getTerrainByLocation(rowIndex, colIndex)" class="w-10 h-10 shrink-0 tile" />
       </div>
@@ -152,7 +152,7 @@ export default {
   padding: 0; /* Remove any padding */
   backface-visibility: hidden; /* Improve rendering quality */
   /* Ensure no gaps between tiles */
-  border: 1px solid transparent;
+  border: 0px solid transparent;
   box-sizing: border-box;
 }
 </style>

@@ -7,6 +7,7 @@ class TransportTile extends Tile {
             path: [],
             goingForward: true
         };
+        this.iconCategory = 'transport';
     }
 
     static get type() {
@@ -55,7 +56,6 @@ class TransportTile extends Tile {
 
         const nextStep = path[nextIndex];
         if (this.world.tiles[nextStep.y][nextStep.x] !== null) {
-            console.log(`Position (${nextStep.x}, ${nextStep.y}) is not empty`);
             return;
         }
 

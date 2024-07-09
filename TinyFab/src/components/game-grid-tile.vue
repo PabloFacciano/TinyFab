@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { useGameStore } from '../stores/game';
 export default {
   name: 'GameGridTile',
   props: {
@@ -25,16 +26,18 @@ export default {
   },
   methods: {
     tileClick(){
-      console.log(this.tile.showBorder)
-      this.tile.showBorder = !this.tile.showBorder;
-      console.log(this.tile.showBorder)
+      if (!this.tile) return;
+      const gameStore = useGameStore();
+      gameStore.onCellClick(this.tile);
     }
   },
   computed: {
     elevation(){
+      if(!this.terrain) return 50;
       return parseInt((this.terrain.elevation.toFixed(2) + '').substring(2,4));
     },
     selected(){
+      if (!this.tile) return false;
       return {
         'border rounded w-full h-full': this.tile.showBorder
       }
@@ -53,19 +56,29 @@ export default {
       return obj;
     },
     icon(){
-      let icon = '';
+      if (!this.tile) return;
+      if (this.tile.empty) return;
 
       const icons = {
         truck: 'https://img.icons8.com/color/48/truck--v1.png',
-        tree: 'https://img.icons8.com/color/48/deciduous-tree.png',
-        rock: 'https://img.icons8.com/color/48/coal.png'
+        wood: 'https://img.icons8.com/color/48/deciduous-tree.png',
+        stone: 'https://img.icons8.com/color/48/rock.png',
+        coal: 'https://img.icons8.com/color/48/coal.png',
+        iron: 'https://img.icons8.com/color-glass/48/rock.png',
+        factory: 'https://img.icons8.com/color/48/factory.png',
+        market: 'https://img.icons8.com/color/48/shopping-basket-2.png',
+        question: 'https://img.icons8.com/color/100/question-mark.png'
+      };
+
+      if (this.tile.iconCategory in icons){
+        return icons[this.tile.icon]
       }
 
-      if (this.elevation >= 40 && this.elevation < 45){
-        //return icons.tree;
+      if (this.tile.iconCategory == 'nature' && this.tile.state.generation.resource in icons){
+        return icons[this.tile.state.generation.resource];
       }
 
-      return icon;
+      return icons.question;
     }
   }
 };

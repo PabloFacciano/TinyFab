@@ -3,6 +3,7 @@ import { Tile } from './Tile';
 export default class NatureTile extends Tile {
   constructor(world, location) {
     super(world, location);
+    this.iconCategory = 'nature';
     this.state = {
       generation: {
         resource: NatureTile.randomResource(),

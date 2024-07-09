@@ -20,7 +20,8 @@ export default {
       const gameStore = useGameStore();
       return gameStore?.initializeWorld(
         gameStore.world.width,
-        gameStore.world.height
+        gameStore.world.height,
+        15
       );
     },
   }
