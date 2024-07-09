@@ -1,14 +1,10 @@
 <template>
   <div 
     class="p-2 flex items-center justify-center select-none"
-    :class="{
-      'bg-sky-950': this.terrain.type == 'river',
-      'bg-zinc-900': this.terrain.type == 'mountain',
-      'bg-zinc-800': this.terrain.type == 'plain'
-    }"
+    :class="this.class"
   >
-  <!--div v-text="(this.terrain.elevation.toFixed(1) + '').substring(2,3)"></div-->
-  <img v-if="this.terrain.type == 'plain' && false" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABa0lEQVR4nO3VP0jXQRjHcS3C0CFIRXHUrRbRxf4g6OgkgohjhkG6aIuS0NTQ0lSLCo4KIor8UETBwZodhIYWEaOiHNRByUFecXDC8UP9+efr5sFn+d49z/u55+7zvaKi23E7rj3wAstYuYSW0HZRwD6eofESase3iwIOrrDrCmzdNOAvXuJVoi6UZgU4xmd8SDSHDVRm2iI8xVDURrwIdzIBoBp/MJJAVvEuK0Aj1vLmH2ITzVkAGvDllDWd+JoF4AF+YgbTieZxlNUh16AjVp3q340aTcidD8BjTCCHPtw9D4B7GMACRlF7JgB12I6ubMUiPhYAhKSzaEE/foSWpYDfeB17NoXhJFEZduIvIO3tGxyiN8aXJDHvMR5z/gofnkTLh0rWQ/XJ4uJoohAQ5k/0CT0Yyz8LDAZfxJxN+Vt/ju94hPuxmlyBgwyufRt2gfposIbzArojZBeTKC8AqIoe2AtvRHgr0gX/AToexY+xS/nbAAAAAElFTkSuQmCC">
+  <div v-if="false" v-text="this.elevation"></div>
+  <img v-if="this.icon" :src="this.icon" alt="icon">
   </div>
 </template>
 
@@ -25,5 +21,38 @@ export default {
       required: true
     }
   },
+  computed: {
+    elevation(){
+      return parseInt((this.terrain.elevation.toFixed(2) + '').substring(2,4));
+    },
+    class(){
+      let obj = {};
+
+      obj[`bg-stone-950`] = this.elevation >= 65;
+      obj[`bg-stone-800/[0.4]`] = this.elevation >= 60 && this.elevation < 65;
+      obj[`bg-green-800/[0.5]`] = this.elevation >= 50 && this.elevation < 60;
+      obj[`bg-green-800/[0.6]`] = this.elevation >= 45 && this.elevation < 50;
+      obj[`bg-green-800/[0.7]`] = this.elevation >= 40 && this.elevation < 45;
+      obj[`bg-green-800/[0.8]`] = this.elevation >= 35 && this.elevation < 40;
+      obj[`bg-cyan-950/[1]`] = this.elevation < 35;
+
+      return obj;
+    },
+    icon(){
+      let icon = '';
+
+      const icons = {
+        truck: 'https://img.icons8.com/color/48/truck--v1.png',
+        tree: 'https://img.icons8.com/color/48/deciduous-tree.png',
+        rock: 'https://img.icons8.com/color/48/coal.png'
+      }
+
+      if (this.elevation >= 40 && this.elevation < 45){
+        return icons.tree;
+      }
+
+      return icon;
+    }
+  }
 };
 </script>
