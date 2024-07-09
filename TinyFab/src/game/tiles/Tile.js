@@ -9,6 +9,7 @@ export class Tile {
     this.itemsIn = {};
     this.itemsOut = {};
     this.state = {};
+    this.showBorder = false;
   }
 
   static get type() {

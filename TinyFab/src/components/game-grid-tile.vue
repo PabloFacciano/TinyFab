@@ -2,9 +2,11 @@
   <div 
     class="p-2 flex items-center justify-center select-none"
     :class="this.class"
+    @click="tileClick"
   >
-  <div v-if="false" v-text="this.elevation"></div>
-  <img v-if="this.icon" :src="this.icon" alt="icon">
+    <div :class="selected" >
+      <img v-if="this.icon" :src="this.icon" alt="icon">
+    </div>
   </div>
 </template>
 
@@ -21,9 +23,21 @@ export default {
       required: true
     }
   },
+  methods: {
+    tileClick(){
+      console.log(this.tile.showBorder)
+      this.tile.showBorder = !this.tile.showBorder;
+      console.log(this.tile.showBorder)
+    }
+  },
   computed: {
     elevation(){
       return parseInt((this.terrain.elevation.toFixed(2) + '').substring(2,4));
+    },
+    selected(){
+      return {
+        'border rounded w-full h-full': this.tile.showBorder
+      }
     },
     class(){
       let obj = {};
@@ -48,7 +62,7 @@ export default {
       }
 
       if (this.elevation >= 40 && this.elevation < 45){
-        return icons.tree;
+        //return icons.tree;
       }
 
       return icon;
