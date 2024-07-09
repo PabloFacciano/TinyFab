@@ -1,7 +1,7 @@
 'use strict';
 
-class PerlinNoise {
-  constructor(frequency = 3) {
+export default class PerlinNoise {
+  constructor(frequency = 4) {
     this.frequency = frequency;
     this.seed();
   }
@@ -66,5 +66,3 @@ class PerlinNoise {
     return v;
   }
 }
-
-export default PerlinNoise;
