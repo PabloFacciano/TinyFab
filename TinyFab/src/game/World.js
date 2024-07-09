@@ -15,15 +15,7 @@ class World {
         for (let x = 0; x < width; x++) {
             for (let y = 0; y < height; y++) {
                 const value = this.perlinNoise.generate(x / width , y / height);
-                let type;
-                if (value < 0.40) {
-                    type = 'river';
-                } else if (value < 0.60) {
-                    type = 'plain';
-                } else {
-                    type = 'mountain';
-                }
-                this.terrain[x][y] = { type, elevation: value };
+                this.terrain[x][y] = { elevation: value };
             }
         }
     }

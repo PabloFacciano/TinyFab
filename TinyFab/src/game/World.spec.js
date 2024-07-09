@@ -39,15 +39,6 @@ describe('World', () => {
         expect(world.tiles[0].length).toBe(3);
     });
 
-    it('should fill terrain with objects containing type as plain, mountain or river', () => {
-        world.create(3, 3);
-        for (let row of world.terrain) {
-            for (let cell of row) {
-                expect(['plain', 'mountain', 'river']).toContain(cell.type);
-            }
-        }
-    });
-
     it('should run update on non-null tiles', () => {
         const mockTile = {
             update: vi.fn(),
