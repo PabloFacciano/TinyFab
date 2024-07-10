@@ -7,9 +7,14 @@ import NatureTile from '../game/tiles/NatureTile';
 export const useGameStore = defineStore('game', {
   state: () => ({
     world: null,
+    selectedTile: null,
+    tool: 'select'
   }),
   actions: {
     initializeWorld(width, height, expectedCount) {
+      this.selectedTile = null;
+      this.tool = 'select';
+
       let perlinNoise = new PerlinNoise();
       let wrl = new World(perlinNoise);
       wrl.create(width, height);
@@ -22,7 +27,7 @@ export const useGameStore = defineStore('game', {
         if (!wrl.tiles[x]) {
           wrl.tiles[x] = [];
         }
-        if (wrl.terrain[x][y].elevation < 0.35 || wrl.terrain[x][y].elevation > 0.65){
+        if (wrl.terrain[x][y].elevation < 35 || wrl.terrain[x][y].elevation > 65){
           continue;
         }
         wrl.tiles[x][y] = new NatureTile(wrl, { x, y });
@@ -31,7 +36,22 @@ export const useGameStore = defineStore('game', {
       this.world = wrl;
     },
     onCellClick(tile, location){
-      tile.showBorder = !tile.showBorder;
+
+      if (this.tool == 'select'){
+        this.unselectAll();
+        this.selectedTile = tile;
+        tile.showBorder = true;
+      }
+
+    },
+    unselectAll(){      
+      for (let row of this.world.tiles) {
+        for (let tile of row) {
+            if (tile) {
+                tile.showBorder = false;
+            }
+        }
+    }
     }
   }
 });

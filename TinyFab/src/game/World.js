@@ -16,8 +16,8 @@ class World {
             this.tiles[x] = [];
             for (let y = 0; y < height; y++) {
                 const value = this.perlinNoise.generate(x / width , y / height);
-                this.terrain[x][y] = { elevation: value };
-                this.tiles[x][y] = { empty: true, showBorder: false };
+                this.terrain[x][y] = { elevation: (value * 100).toFixed(0) };
+                this.tiles[x][y] = { empty: true, showBorder: false, location: {x,y} };
             }
         }
         

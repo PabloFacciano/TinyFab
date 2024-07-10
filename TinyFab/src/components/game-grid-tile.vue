@@ -1,8 +1,8 @@
 <template>
   <div 
     class="p-2 flex items-center justify-center select-none"
-    :class="this.class"
-    @click="tileClick"
+    :style="this.style"
+    @mousedown="tileClick"
   >
     <div :class="selected" >
       <img v-if="this.icon" :src="this.icon" alt="icon">
@@ -33,8 +33,7 @@ export default {
   },
   computed: {
     elevation(){
-      if(!this.terrain) return 50;
-      return parseInt((this.terrain.elevation.toFixed(2) + '').substring(2,4));
+      return this.terrain?.elevation ?? 50;
     },
     selected(){
       if (!this.tile) return false;
@@ -42,17 +41,36 @@ export default {
         'border rounded w-full h-full': this.tile.showBorder
       }
     },
-    class(){
+    style(){
       let obj = {};
 
-      obj[`bg-stone-950`] = this.elevation >= 65;
-      obj[`bg-stone-800/[0.4]`] = this.elevation >= 60 && this.elevation < 65;
-      obj[`bg-green-800/[0.5]`] = this.elevation >= 50 && this.elevation < 60;
-      obj[`bg-green-800/[0.6]`] = this.elevation >= 45 && this.elevation < 50;
-      obj[`bg-green-800/[0.7]`] = this.elevation >= 40 && this.elevation < 45;
-      obj[`bg-green-800/[0.8]`] = this.elevation >= 35 && this.elevation < 40;
-      obj[`bg-cyan-950/[1]`] = this.elevation < 35;
+      let interpolateOpacity = (minElevation, maxElevation) => {
+        let factor = ((this.elevation - minElevation) / (maxElevation - minElevation)).toFixed(2);
+        let opacity = Math.sqrt(factor); // Usar una función cuadrática inversa para una transición más gradual
+        return Math.round(opacity * 255).toString(16).padStart(2, '0').toUpperCase();
+  
+      }
 
+      if (this.elevation >= 65) {
+        let hexOpacity = interpolateOpacity(60, 100);
+        obj[`background-color`] = `#052e16${hexOpacity}`; // bg-stone-950
+      } else if (this.elevation >= 35 && this.elevation < 65) {
+        let hexOpacity = interpolateOpacity(90, 35);
+        obj[`background-color`] = `#06732e${hexOpacity}`; // verde
+      } else {
+        let hexOpacity = interpolateOpacity(0, 35);
+        obj[`background-color`] = `#063d73${hexOpacity}`; // azul
+      }
+      
+      // if (this.elevation >= 35 ) {
+      //   let hexOpacity = interpolateOpacity(25, 100);
+      //   obj[`background-color`] = `#06732e${hexOpacity}`; // verde
+      // } else {
+      //   let hexOpacity = interpolateOpacity(0, 45);
+      //   obj[`background-color`] = `#063d73${hexOpacity}`; // azul
+      // }
+
+      console.log(obj)
       return obj;
     },
     icon(){

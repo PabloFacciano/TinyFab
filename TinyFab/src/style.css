@@ -10,7 +10,6 @@
 
 ::-webkit-scrollbar
 {
-  border-radius: 10px;
   width: .5rem;
   height: .5rem;
 }
@@ -22,9 +21,9 @@
 
 ::-webkit-scrollbar-thumb
 {
+  border-radius: 1rem;
   background-color: #666;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #fff;
-  border-radius: 1rem;
 }

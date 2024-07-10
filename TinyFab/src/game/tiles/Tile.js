@@ -10,6 +10,7 @@ export class Tile {
     this.itemsOut = {};
     this.state = {};
     this.showBorder = false;
+    this.empty = false;
   }
 
   static get type() {

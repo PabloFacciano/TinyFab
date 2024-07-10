@@ -10,9 +10,9 @@ const app = createApp(App);
 const pinia = createPinia();
 app.use(pinia);
 
-// Mount the app
-app.mount('#app');
-
 // Use the store and initialize the world
 const store = useGameStore();
-store.initializeWorld(60, 30, 15); // Or whatever dimensions you need
+store.initializeWorld(30, 20, 15);
+
+// Mount the app
+app.mount('#app');

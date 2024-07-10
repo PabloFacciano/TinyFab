@@ -3,6 +3,7 @@ import { Tile } from './Tile';
 class TransportTile extends Tile {
     constructor(world, location) {
         super(world, location);
+        this.type = "transport";
         this.state = {
             path: [],
             goingForward: true
