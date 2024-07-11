@@ -7,7 +7,7 @@
     <div class="mb-3">What do you want to build at ({{ tile.location.x }}, {{ tile.location.y }})?</div>
     <!-- item list -->
     <div class="grid grid-cols-3 mb-5">
-      <button v-for="block in this.blocks" :title="block.label" @click="alert('Clicked!')"
+      <button v-for="block in this.blocks" :title="block.label" @click="this.gameStore.buyAndPlaceTile(block)"
         class="m-2 p-3 w-auto border border-indigo-500 rounded hover:bg-indigo-500 transition-all"><img :src="block.icon"
           :alt="block.label" /></button>
     </div>
@@ -32,10 +32,12 @@ export default {
       gameStore: useGameStore(),
       blocks: [
         {
+          type: 'nature',
           label: 'Nature',
           icon: 'https://img.icons8.com/color/48/deciduous-tree.png'
         },
         {
+          type: 'transport',
           label: 'Transport',
           icon: 'https://img.icons8.com/color/48/truck--v1.png'
         }

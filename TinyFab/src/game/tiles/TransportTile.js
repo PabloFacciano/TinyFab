@@ -1,6 +1,6 @@
 import { Tile } from './Tile';
 
-class TransportTile extends Tile {
+export default class TransportTile extends Tile {
     constructor(world, location) {
         super(world, location);
         this.type = "transport";
@@ -65,5 +65,3 @@ class TransportTile extends Tile {
         this.world.tiles[nextStep.y][nextStep.x] = this;
     }
 }
-
-export default TransportTile;
