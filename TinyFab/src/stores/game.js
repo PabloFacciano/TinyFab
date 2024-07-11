@@ -2,7 +2,9 @@
 import { defineStore } from 'pinia';
 import World from '../game/World';
 import PerlinNoise from '../game/PerlinNoise';
+
 import NatureTile from '../game/tiles/NatureTile';
+import TransportTile from '../game/tiles/TransportTile';
 
 export const useGameStore = defineStore('game', {
   state: () => ({
@@ -52,6 +54,30 @@ export const useGameStore = defineStore('game', {
             }
         }
     }
+    },
+    buyAndPlaceTile(block){
+      let location = {
+        x: this.selectedTile.location.x,
+        y: this.selectedTile.location.y
+      }
+      let newTile;
+
+      if (block.type == 'nature'){
+        newTile = new NatureTile(this.world, location);
+      } else if (block.type == 'transport'){
+        newTile = new TransportTile(this.world, location);
+      }
+
+      newTile.location = location;
+      
+      this.world.tiles[location.x][location.y] = newTile;
+      this.onCellClick(newTile, location);
+    },
+    removeSelectedTile(){
+      if (!this.selectedTile) return;
+
+      this.world.tiles[this.selectedTile.location.x][this.selectedTile.location.y].empty = true;
+      this.selectedTile = null;
     }
   }
 });

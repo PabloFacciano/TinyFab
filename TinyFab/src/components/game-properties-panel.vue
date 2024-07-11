@@ -31,6 +31,11 @@
         </tr>
       </table>
 
+      <button
+        class="rounded border border-red-500 hover:bg-red-500 transition-all w-full py-2 mt-3"
+        @click="this.gameStore.removeSelectedTile"
+      >Delete</button>
+
     </div>
   </template>
   
@@ -80,6 +85,16 @@
                 label: 'Generation %',
                 info: 'Generation progress percentage',
                 value: (t) => ((t.state.ticksRunning * 100) / t.state.generation.ticks).toFixed(0) + '%'
+              }
+            ]
+          }, 
+          'transport' : {
+            name: 'Transport',
+            properties: [
+              {
+                label: 'Path',
+                info: 'Path locations',
+                value: (t) => t.path
               }
             ]
           }
