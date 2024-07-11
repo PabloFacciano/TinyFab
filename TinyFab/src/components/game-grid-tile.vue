@@ -51,10 +51,7 @@ export default {
   
       }
 
-      if (this.elevation >= 65) {
-        let hexOpacity = interpolateOpacity(60, 100);
-        obj[`background-color`] = `#052e16${hexOpacity}`; // bg-stone-950
-      } else if (this.elevation >= 35 && this.elevation < 65) {
+      if (this.elevation >= 35 && this.elevation < 165) {
         let hexOpacity = interpolateOpacity(90, 35);
         obj[`background-color`] = `#06732e${hexOpacity}`; // verde
       } else {
@@ -62,15 +59,6 @@ export default {
         obj[`background-color`] = `#063d73${hexOpacity}`; // azul
       }
       
-      // if (this.elevation >= 35 ) {
-      //   let hexOpacity = interpolateOpacity(25, 100);
-      //   obj[`background-color`] = `#06732e${hexOpacity}`; // verde
-      // } else {
-      //   let hexOpacity = interpolateOpacity(0, 45);
-      //   obj[`background-color`] = `#063d73${hexOpacity}`; // azul
-      // }
-
-      console.log(obj)
       return obj;
     },
     icon(){
@@ -94,6 +82,9 @@ export default {
 
       if (this.tile.iconCategory == 'nature' && this.tile.state.generation.resource in icons){
         return icons[this.tile.state.generation.resource];
+      }
+      if (this.tile.iconCategory == 'transport'){
+        return icons.truck;
       }
 
       return icons.question;
