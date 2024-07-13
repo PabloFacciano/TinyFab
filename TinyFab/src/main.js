@@ -12,7 +12,7 @@ app.use(pinia);
 
 // Use the store and initialize the world
 const store = useGameStore();
-store.initializeWorld(30, 20, 15);
+store.initializeWorld(20, 20, 15);
 
 // Mount the app
 app.mount('#app');
