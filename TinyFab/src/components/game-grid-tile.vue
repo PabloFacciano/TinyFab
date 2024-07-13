@@ -2,7 +2,10 @@
   <div 
     class="p-2 flex items-center justify-center select-none"
     :style="this.style"
-    @mousedown="tileClick"
+    @mousedown="tileDown"
+    @mouseleave="tileLeave"
+    @mouseover="tileEnter"
+    @mouseup="tileUp"
   >
     <div :class="selected" >
       <img v-if="this.icon" :src="this.icon" alt="icon">
@@ -14,6 +17,11 @@
 import { useGameStore } from '../stores/game';
 export default {
   name: 'GameGridTile',
+  data(){
+    return {
+      gameStore: useGameStore()
+    }
+  },
   props: {
     tile: {
       type: Object,
@@ -25,10 +33,26 @@ export default {
     }
   },
   methods: {
-    tileClick(){
+    tileDown(){
       if (!this.tile) return;
-      const gameStore = useGameStore();
-      gameStore.onCellClick(this.tile);
+      console.log("Down!")
+      this.gameStore.mouseDownOnTile = true;
+    },
+    tileLeave(){
+      if (!this.tile) return;
+      if (!this.gameStore.mouseDownOnTile) return;
+      this.gameStore.onCellClick(this.tile, this.tile.location);
+
+    },
+    tileEnter(){
+      
+    },
+    tileUp(){
+      if (!this.tile) return;
+      console.log("Up!")
+      this.gameStore.onCellClick(this.tile, this.tile.location);
+      this.gameStore.mouseDownOnTile = false;
+
     }
   },
   computed: {
@@ -51,7 +75,7 @@ export default {
   
       }
 
-      if (this.elevation >= 35 && this.elevation < 165) {
+      if (this.elevation >= 35) {
         let hexOpacity = interpolateOpacity(90, 35);
         obj[`background-color`] = `#06732e${hexOpacity}`; // verde
       } else {

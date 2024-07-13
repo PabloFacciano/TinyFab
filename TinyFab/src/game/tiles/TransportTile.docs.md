@@ -20,14 +20,7 @@ tile.itemsIn = {}
 tile.itemsOut = {}
 tile.acceptItems = {} // user-selected after built
 tile.state: {
-    path: [
-        { x: 0, y: 0, in: true, out: false},
-        { x: 1, y: 0, in: false, out: false},
-        ...
-        { x: 2, y: 0, in: false, out: false},
-        { x: 3, y: 0, in: false, out: true},
-    ],
-    goingForward: true
+    direction: 'left' // left, right, up, down
 }
 
 tile.state.path sólo puede contener tiles vacíos del mundo, excluyendo el tile actual.

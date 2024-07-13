@@ -18,7 +18,7 @@
       <table class="bg-neutral-700 table-fixed border-collapse text-start w-full mb-3">
         <tr v-for="prop in this.tileGlobalProperties.concat(this.tileType.properties)" :key="prop.label" :title="prop.info">
           <td class="bg-neutral-900 px-3 py-1">{{ prop.label }}</td>
-          <td class="px-3 py-1">{{ prop.value(this.tile) }}</td>
+          <td class="px-3 py-1" @click="prop.onPropertyValueClick(this.tile)">{{ prop.value(this.tile) }}</td>
         </tr>
       </table>
 
@@ -32,6 +32,7 @@
       </table>
 
       <button
+        v-if="this.gameStore.tool == 'select'"
         class="rounded border border-red-500 hover:bg-red-500 transition-all w-full py-2 mt-3"
         @click="this.gameStore.removeSelectedTile"
       >Delete</button>
@@ -45,16 +46,19 @@
     name: 'GamePropertiesPanel',
     data() {
       return {
+        gameStore: useGameStore(),
         tileGlobalProperties: [
           {
             label: 'Type',
             info: 'The Type determines what the Tile does.',
-            value: (t) => t.type
+            value: (t) => t.type,
+            onPropertyValueClick: () => {}
           },
           {
             label: 'Location',
             info: 'Coordinates indicating where the Tile is located.',
-            value: (t) => t.location.x + ', ' + t.location.y
+            value: (t) => t.location.x + ', ' + t.location.y,
+            onPropertyValueClick: () => {}
           }
         ],
         tileTypes: {
@@ -64,27 +68,32 @@
               {
                 label: 'Resource',
                 info: 'Resource that will be generated from time to time.',
-                value: (t) => t.state.generation.resource
+                value: (t) => t.state.generation.resource,
+                onPropertyValueClick: () => {}
               },
               {
                 label: 'Capacity',
                 info: 'Maximum amount of resources to be generated.',
-                value: (t) => t.state.generation.capacity
+                value: (t) => t.state.generation.capacity,
+                onPropertyValueClick: () => {}
               },
               {
                 label: 'Generation Time',
                 info: 'Time required for resource generation.',
-                value: (t) => t.state.generation.ticks
+                value: (t) => t.state.generation.ticks,
+                onPropertyValueClick: () => {}
               },
               {
                 label: 'Generation Ammount',
                 info: 'Ammount of resource that will be generated from time to time.',
-                value: (t) => t.state.generation.ammount
+                value: (t) => t.state.generation.ammount,
+                onPropertyValueClick: () => {}
               },
               {
                 label: 'Generation %',
                 info: 'Generation progress percentage',
-                value: (t) => ((t.state.ticksRunning * 100) / t.state.generation.ticks).toFixed(0) + '%'
+                value: (t) => ((t.state.ticksRunning * 100) / t.state.generation.ticks).toFixed(0) + '%',
+                onPropertyValueClick: () => {}
               }
             ]
           }, 
@@ -94,7 +103,23 @@
               {
                 label: 'Path',
                 info: 'Path locations',
-                value: (t) => t.path
+                value: (t) => {
+                  if (t.state.path.length == 0){
+                    return 'Click to edit';
+                  }
+                  let str = 'Click to edit | ';
+                  t.state.path.forEach(xy => {
+                    str += `${xy.x},${xy.y}  |  `;
+                  });
+                  return str;
+                },
+                onPropertyValueClick: (t) => {
+                  if (this.gameStore.tool == 'path'){
+                    this.gameStore.setTool('select');
+                    return;
+                  }
+                  this.gameStore.setTool('path');
+                }
               }
             ]
           }
@@ -102,9 +127,6 @@
       }
     },
     computed: {
-      gameStore(){
-        return useGameStore()
-      },
       visible() {
         return (this.tile && !this.tile.empty);
       },

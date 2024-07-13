@@ -1,13 +1,17 @@
 <template>
   <div 
   class="
-    text-center p-2 flex justify-between items-center
+    text-center flex justify-between items-stretch
     border-b-2 border-indigo-500
     /* light mode */ bg-zinc-200 text-zinc-800 
     /* dark mode */ dark:bg-zinc-800 dark:text-zinc-200 
   ">
-    <button class="border-2 border-indigo-500 rounded p-2" @click="NewMap()">New Map</button>
-    <div>150 Coins</div>
+    <div class="flex">
+      <button class="hover:bg-indigo-800 rounded p-2 m-2" @click="NewMap()">New Map</button>
+      <button :class="{ 'bg-indigo-500': this.gameStore.tool == 'select' }" class="hover:bg-indigo-800 p-2" @click="this.gameStore.setTool('select')"><img width="24" height="24" src="https://img.icons8.com/ios/48/ffffff/cursor--v1.png" alt="cursor--v1"/></button>
+      <button :class="{ 'bg-indigo-500': this.gameStore.tool == 'path' }" class="p-2"><img width="24" height="24" src="https://img.icons8.com/material/48/ffffff/itinerary--v1.png" alt="itinerary--v1"/></button>
+    </div>
+    <div class="m-2">150 Coins</div>
   </div>
 </template>
 
@@ -15,12 +19,16 @@
 import { useGameStore } from '../stores/game';
 
 export default {
+  data(){
+    return {
+      gameStore: useGameStore()
+    }
+  },
   methods: {
     NewMap() {
-      const gameStore = useGameStore();
-      return gameStore?.initializeWorld(
-        gameStore.world.width,
-        gameStore.world.height,
+      this.gameStore.initializeWorld(
+        this.gameStore.world.width,
+        this.gameStore.world.height,
         8
       );
     },
