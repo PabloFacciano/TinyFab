@@ -101,24 +101,19 @@
             name: 'Transport',
             properties: [
               {
-                label: 'Path',
-                info: 'Path locations',
-                value: (t) => {
-                  if (t.state.path.length == 0){
-                    return 'Click to edit';
-                  }
-                  let str = 'Click to edit | ';
-                  t.state.path.forEach(xy => {
-                    str += `${xy.x},${xy.y}  |  `;
-                  });
-                  return str;
-                },
+                label: 'Direction',
+                info: 'Transport items in this direction',
+                value: (t) => t.state.direction,
                 onPropertyValueClick: (t) => {
-                  if (this.gameStore.tool == 'path'){
-                    this.gameStore.setTool('select');
-                    return;
+                  if (t.state.direction == 'right') {
+                    t.state.direction = 'down';
+                  } else if (t.state.direction == 'down') {
+                    t.state.direction = 'left';
+                  } else if (t.state.direction == 'left') {
+                    t.state.direction = 'up';
+                  } else if (t.state.direction == 'up') {
+                    t.state.direction = 'right';
                   }
-                  this.gameStore.setTool('path');
                 }
               }
             ]
