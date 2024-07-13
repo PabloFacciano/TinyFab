@@ -10,7 +10,7 @@
       <table class="bg-neutral-700 table-fixed border-collapse text-start w-full mb-3">
         <tr>
           <td class="bg-neutral-900 px-3 py-1">Elevation</td>
-          <td class="px-3 py-1">{{ this.terrain.elevation }}</td>
+          <td class="px-3 py-1">{{ this.terrain?.elevation ?? '???' }}</td>
         </tr>
       </table>
 

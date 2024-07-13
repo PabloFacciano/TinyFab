@@ -26,6 +26,7 @@ import GameGridTile from './game-grid-tile.vue';
 export default {
   data() {
     return {
+      gameStore: useGameStore(),
       zoom: 1,
       zoomStep: 0.05,
       minZoom: 0.05,
@@ -46,8 +47,7 @@ export default {
   },
   computed: {
     tiles() {
-      const gameStore = useGameStore();
-      return gameStore?.world?.tiles;
+      return this.gameStore.world?.tiles;
     },
     contentStyle() {
       return {
@@ -67,8 +67,7 @@ export default {
   },
   methods: {
     getTerrainByLocation(x, y) {
-      const gameStore = useGameStore();
-      return gameStore?.world?.terrain[x][y];
+      return this.gameStore.world?.terrain[x][y];
     },
     handleWheel(event) {
       if (event.ctrlKey) {

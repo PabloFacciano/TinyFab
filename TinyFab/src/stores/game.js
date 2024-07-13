@@ -10,7 +10,8 @@ export const useGameStore = defineStore('game', {
   state: () => ({
     world: null,
     tool: 'select',
-    selectedTile: null
+    selectedTile: null,
+    tickInterval: null
   }),
   actions: {
     initializeWorld(width, height, expectedCount) {
@@ -39,15 +40,12 @@ export const useGameStore = defineStore('game', {
     },
     onCellClick(tile, location){
 
-      if (this.tool == 'select'){
-        this.unselectAll();
-        this.selectedTile = tile;
-        tile.showBorder = true;
+    
+      this.unselectAll();
+      this.selectedTile = tile;
+      tile.showBorder = true;
 
-      } else if (this.tool == 'path'){
-        this.pathToolEvent(tile, location);        
-
-      }
+        
 
     },
     unselectAll(){      
@@ -91,10 +89,13 @@ export const useGameStore = defineStore('game', {
       this.tool = tool;
     },
     playSimulation(){
-
+      this.tickInterval = setInterval(() => {
+        this.world.runTick();
+      }, 100);
     },
     stopSimulation(){
-
+      clearInterval(this.tickInterval);
+      this.tickInterval = null;
     }
   }
 });

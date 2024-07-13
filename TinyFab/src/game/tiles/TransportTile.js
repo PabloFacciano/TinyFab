@@ -25,7 +25,7 @@ export default class TransportTile extends Tile {
   update() {
 
     let updateDirection = false;
-    let nextLocation = { ...this.location };
+    let nextLocation = { x: this.location.x, y: this.location.y };
     if (this.state.direction == 'right') {
       nextLocation.x += 1;
     } else if (this.state.direction == 'left') {
@@ -36,7 +36,7 @@ export default class TransportTile extends Tile {
       nextLocation.y += 1;
     }
     
-    if (nextLocation.x < 0 || nextLocation.y < 0) {
+    if (nextLocation.x <= 0 || nextLocation.y <= 0) {
       updateDirection = true;
     } else if (nextLocation.x >= (this.world.width - 1) || nextLocation.y >= (this.world.height - 1)) {
       updateDirection = true;
@@ -56,15 +56,11 @@ export default class TransportTile extends Tile {
       }
     }
 
-    if (!updateDirection) {
-
       let emptyCell = { empty: true, location: { x: this.location.x, y: this.location.y } };
       this.world.tiles[emptyCell.location.x][emptyCell.location.y] = emptyCell;
-
-      this.location = { ...nextLocation }
-      this.world.tiles[nextLocation.x][nextLocation.y] = { ...this };
-    }
-
+      
+      this.location = { x: nextLocation.x, y: nextLocation.y };
+      this.world.tiles[nextLocation.x][nextLocation.y] = this;
 
   }
 }
