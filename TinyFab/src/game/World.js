@@ -34,7 +34,7 @@ class World {
     runTick() {
         for (let row of this.tiles) {
             for (let tile of row) {
-                if (tile) {
+                if (tile && tile.update) {
                     tile.update();
                 }
             }

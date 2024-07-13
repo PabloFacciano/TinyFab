@@ -51,7 +51,7 @@ describe('TransportTile', () => {
 
         transportTile.update();
 
-        expect(world.tiles[0][0]).toBeNull();
+        expect(world.tiles[0][0].empty).toBe(true);;
         expect(world.tiles[0][1]).toBe(transportTile); 
     });
 
@@ -70,7 +70,7 @@ describe('TransportTile', () => {
 
         transportTile.update();
 
-        expect(world.tiles[0][3]).toBeNull();
+        expect(world.tiles[0][3].empty).toBe(true);;
         expect(world.tiles[0][2]).toBe(transportTile); 
     });
 
@@ -111,7 +111,7 @@ describe('TransportTile', () => {
 
         transportTile.update();
 
-        expect(world.tiles[0][2]).toBeNull();
+        expect(world.tiles[0][2].empty).toBe(true);
         expect(world.tiles[0][1]).toBe(transportTile);
     });
 
@@ -131,7 +131,7 @@ describe('TransportTile', () => {
         transportTile.update();
 
         expect(transportTile.state.goingForward).toBe(false);
-        expect(world.tiles[0][1]).toBeNull();
+        expect(world.tiles[0][1].empty).toBe(true);
         expect(world.tiles[0][0]).toBe(transportTile);
     });
 
@@ -148,7 +148,7 @@ describe('TransportTile', () => {
         transportTile.update();
 
         expect(transportTile.state.goingForward).toBe(true);
-        expect(world.tiles[0][0]).toBeNull();
+        expect(world.tiles[0][0].empty).toBe(true);
         expect(world.tiles[0][1]).toBe(transportTile);
     });
 
