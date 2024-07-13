@@ -2,10 +2,7 @@
   <div 
     class="p-2 flex items-center justify-center select-none"
     :style="this.style"
-    @mousedown="tileDown"
-    @mouseleave="tileLeave"
-    @mouseover="tileEnter"
-    @mouseup="tileUp"
+    @mousedown="onCellClick"
   >
     <div :class="selected" >
       <img v-if="this.icon" :src="this.icon" alt="icon">
@@ -33,26 +30,9 @@ export default {
     }
   },
   methods: {
-    tileDown(){
+    onCellClick(){
       if (!this.tile) return;
-      console.log("Down!")
-      this.gameStore.mouseDownOnTile = true;
-    },
-    tileLeave(){
-      if (!this.tile) return;
-      if (!this.gameStore.mouseDownOnTile) return;
       this.gameStore.onCellClick(this.tile, this.tile.location);
-
-    },
-    tileEnter(){
-      
-    },
-    tileUp(){
-      if (!this.tile) return;
-      console.log("Up!")
-      this.gameStore.onCellClick(this.tile, this.tile.location);
-      this.gameStore.mouseDownOnTile = false;
-
     }
   },
   computed: {

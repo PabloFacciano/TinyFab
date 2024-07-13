@@ -8,8 +8,8 @@
   ">
     <div class="flex">
       <button class="hover:bg-indigo-800 rounded p-2 m-2" @click="NewMap()">New Map</button>
-      <button :class="{ 'bg-indigo-500': this.gameStore.tool == 'select' }" class="hover:bg-indigo-800 p-2" @click="this.gameStore.setTool('select')"><img width="24" height="24" src="https://img.icons8.com/ios/48/ffffff/cursor--v1.png" alt="cursor--v1"/></button>
-      <button :class="{ 'bg-indigo-500': this.gameStore.tool == 'path' }" class="p-2"><img width="24" height="24" src="https://img.icons8.com/material/48/ffffff/itinerary--v1.png" alt="itinerary--v1"/></button>
+      <button :class="{ 'bg-indigo-500': this.gameStore.tool == 'select' }" class="hover:bg-indigo-800 p-2" @click="this.gameStore.setTool('select')"><img width="24" height="24" src="https://img.icons8.com/ios/48/ffffff/cursor--v1.png" alt="select"/></button>
+      <button :class="{ 'bg-indigo-500': this.gameStore.tool == 'play' }" class="p-2"><img width="24" height="24" src="https://img.icons8.com/ios-glyphs/48/000000/play--v1.png" alt="play/pause"/></button>
     </div>
     <div class="m-2">150 Coins</div>
   </div>
