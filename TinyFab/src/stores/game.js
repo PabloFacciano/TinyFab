@@ -12,7 +12,7 @@ export const useGameStore = defineStore('game', {
     world: null,
     tool: 'select',
     selectedTile: null,
-    tickInterval: null
+    running: false
   }),
   actions: {
     initializeWorld(width, height, expectedCount) {
@@ -81,24 +81,29 @@ export const useGameStore = defineStore('game', {
     removeSelectedTile(){
       if (!this.selectedTile) return;
 
-      this.world.tiles[this.selectedTile.location.x][this.selectedTile.location.y].empty = true;
+      this.world.tiles[this.selectedTile.location.x][this.selectedTile.location.y] = {
+        empty: true,
+        location: {
+          x: this.selectedTile.location.x,
+          y: this.selectedTile.location.y
+        }
+      };
       this.selectedTile = null;
     },
     setTool(tool){      
-      if (this.tool != 'play' && tool == 'play') this.playSimulation();
-      if (this.tool == 'play' && tool != 'play') this.stopSimulation();
-
+      if (this.tool != 'play' && tool == 'play') {
+        this.running = true;
+        this.playSimulation();
+      } else if (this.tool == 'play' && tool != 'play') {
+        this.running = false;
+      }
 
       this.tool = tool;
     },
     playSimulation(){
-      this.tickInterval = setInterval(() => {
-        this.world.runTick();
-      }, 100);
-    },
-    stopSimulation(){
-      clearInterval(this.tickInterval);
-      this.tickInterval = null;
+      if (!this.running) return;
+      this.world.runTick();
+      window.requestAnimationFrame(this.playSimulation);
     }
   }
 });
