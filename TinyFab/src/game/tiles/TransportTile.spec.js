@@ -21,7 +21,7 @@ describe('TransportTile', () => {
     expect(transportTile.constructor.cost).toEqual({ wood: 4, rock: 2 });
     expect(transportTile.itemsIn).toEqual({});
     expect(transportTile.itemsOut).toEqual({});
-    expect(transportTile.constructor.acceptItems).toEqual({});
+    expect(transportTile.constructor.acceptItems).toEqual({ '*': 20 });
     expect(transportTile.state).toEqual({
       direction: 'right',
       onBlockTurn: 'back'
@@ -112,13 +112,12 @@ describe('TransportTile', () => {
   })
 
   it('should change direction if cannot move to the next cell', () => {
-
     world = {
       width: 1,
       height: 1,
       tiles: Array(1).fill().map(() => Array(1).fill({ ...emptyCell }))
     };
-    transportTile = new TransportTile(world, { x: 0, y: 0 })
+    transportTile = new TransportTile(world, { x: 0, y: 0 });
     world.tiles[0][0] = transportTile;
 
     let expected_onBlockTurn = {
@@ -140,11 +139,10 @@ describe('TransportTile', () => {
         left: 'up',
         up: 'right'
       }
-    }
-
+    };
 
     // Test for 'back' turns
-    transportTile.onBlockTurn = 'back';
+    transportTile.state.onBlockTurn = 'back';
     for (let direction in expected_onBlockTurn.back) {
       transportTile.state.direction = direction;
       transportTile.update();
@@ -152,7 +150,7 @@ describe('TransportTile', () => {
     }
 
     // Test for 'left' turns
-    transportTile.onBlockTurn = 'left';
+    transportTile.state.onBlockTurn = 'left';
     for (let direction in expected_onBlockTurn.left) {
       transportTile.state.direction = direction;
       transportTile.update();
@@ -160,13 +158,11 @@ describe('TransportTile', () => {
     }
 
     // Test for 'right' turns
-    transportTile.onBlockTurn = 'right';
+    transportTile.state.onBlockTurn = 'right';
     for (let direction in expected_onBlockTurn.right) {
       transportTile.state.direction = direction;
       transportTile.update();
       expect(transportTile.state.direction).toBe(expected_onBlockTurn.right[direction]);
     }
-
   });
-
 });
