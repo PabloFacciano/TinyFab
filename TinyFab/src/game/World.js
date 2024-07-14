@@ -32,23 +32,10 @@ class World {
     }
 
     runTick() {
-        // untick all
-        for (let row of this.tiles) {
-            for (let tile of row) {
-                if (tile) {
-                    tile.tickProcessed = false;
-                }
-            }
-        }
-        // process & tick
-        for (let row of this.tiles) {
-            for (let tile of row) {
-                if (tile && tile.update && !tile.tickProcessed) {
-                    tile.update();
-                    tile.tickProcessed = true;
-                }
-            }
-        }
+        this.tiles
+        .flat()
+        .filter(t => t && t.update)
+        .forEach(t => t.update())
     }
 }
 
