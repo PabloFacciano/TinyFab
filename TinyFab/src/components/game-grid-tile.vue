@@ -5,7 +5,7 @@
     @mousedown="onCellClick"
   >
     <div :class="selected" >
-      <img v-if="this.icon" :src="this.icon" alt="icon">
+      <img v-if="this.icon" :style="customImageStyle" :src="this.icon" alt="icon">
     </div>
   </div>
 </template>
@@ -36,6 +36,22 @@ export default {
     }
   },
   computed: {
+    customImageStyle(){
+      if (!this.tile) return;
+
+      if (this.tile.type == 'transport'){
+        if (this.tile.state.direction == 'left'){
+          return { 'transform': 'scaleX(-1)' }
+        } else if (this.tile.state.direction == 'right'){
+          return { 'transform': 'scaleX(1)' }
+        } else if (this.tile.state.direction == 'up'){
+          return { 'transform': 'rotate(-90deg)' }
+        } else if (this.tile.state.direction == 'down'){
+          return { 'transform': 'rotate(90deg)' }
+        } 
+      }
+
+    },
     elevation(){
       return this.terrain?.elevation ?? 50;
     },

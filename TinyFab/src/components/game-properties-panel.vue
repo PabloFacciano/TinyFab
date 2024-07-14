@@ -115,6 +115,20 @@
                     t.state.direction = 'right';
                   }
                 }
+              },
+              {
+                label: 'On Block Turn',
+                info: 'When the transport is blocked, it will make a turn',
+                value: (t) => t.state.onBlockTurn,
+                onPropertyValueClick: (t) => {
+                  if (t.state.onBlockTurn == 'left') {
+                    t.state.onBlockTurn = 'right';
+                  } else if (t.state.onBlockTurn == 'right') {
+                    t.state.onBlockTurn = 'back';
+                  } else if (t.state.onBlockTurn == 'back') {
+                    t.state.onBlockTurn = 'left';
+                  }
+                }
               }
             ]
           }

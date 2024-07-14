@@ -5,7 +5,8 @@ export default class TransportTile extends Tile {
     super(world, location);
     this.type = "transport";
     this.state = {
-      direction: 'right'
+      direction: 'right',
+      onBlockTurn: 'back'
     };
     this.iconCategory = 'transport';
   }
@@ -36,31 +37,44 @@ export default class TransportTile extends Tile {
       nextLocation.y += 1;
     }
     
-    if (nextLocation.x <= 0 || nextLocation.y <= 0) {
+    if (nextLocation.x < 0 || nextLocation.y < 0) {
       updateDirection = true;
-    } else if (nextLocation.x >= (this.world.width - 1) || nextLocation.y >= (this.world.height - 1)) {
+    } else if (nextLocation.x > (this.world.width - 1) || nextLocation.y > (this.world.height - 1)) {
       updateDirection = true;
     } else if (this.world.tiles[nextLocation.x][nextLocation.y].empty == false) {
       updateDirection = true;
     }
 
     if (updateDirection) {
-      if (this.state.direction == 'right') {
-        this.state.direction = 'left';
-      } else if (this.state.direction == 'left') {
-        this.state.direction = 'right';
-      } else if (this.state.direction == 'up') {
-        this.state.direction = 'down';
-      } else if (this.state.direction == 'down') {
-        this.state.direction = 'up';
-      }
-    }
+      this.state.direction = onBlockTurnResult[this.state.onBlockTurn][this.state.direction]; 
+    } else {
 
       let emptyCell = { empty: true, location: { x: this.location.x, y: this.location.y } };
       this.world.tiles[emptyCell.location.x][emptyCell.location.y] = emptyCell;
       
       this.location = { x: nextLocation.x, y: nextLocation.y };
       this.world.tiles[nextLocation.x][nextLocation.y] = this;
+    }
+  }
+}
 
+const onBlockTurnResult = {
+  back: {
+    right: 'left',
+    left: 'right',
+    up: 'down',
+    down: 'up'
+  },
+  left: {
+    right: 'up',
+    up: 'left',
+    left: 'down',
+    down: 'right'
+  },
+  right: {
+    right: 'down',
+    down: 'left',
+    left: 'up',
+    up: 'right'
   }
 }
