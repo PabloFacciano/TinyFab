@@ -16,7 +16,7 @@ export default class TransportTile extends Tile {
   }
 
   static get cost() {
-    return { wood: 4, rock: 2 };
+    return 250;
   }
 
   static get acceptItems() {

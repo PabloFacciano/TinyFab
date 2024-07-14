@@ -24,7 +24,7 @@ export default class NatureTile extends Tile {
   }
 
   static get cost() {
-    return { wood: 5 };
+    return 1000;
   }
 
   static get acceptItems() {

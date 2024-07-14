@@ -16,7 +16,7 @@ describe('NatureTile', () => {
   });
 
   it('should have correct cost', () => {
-    expect(natureTile.constructor.cost).toEqual({ wood: 5 });
+    expect(natureTile.constructor.cost).toEqual(1000);
   });
 
   it('should initialize with correct properties', () => {

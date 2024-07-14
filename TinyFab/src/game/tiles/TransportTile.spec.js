@@ -18,7 +18,7 @@ describe('TransportTile', () => {
 
   it('should initialize with correct properties', () => {
     expect(transportTile.constructor.type).toBe('transport');
-    expect(transportTile.constructor.cost).toEqual({ wood: 4, rock: 2 });
+    expect(transportTile.constructor.cost).toEqual(250);
     expect(transportTile.itemsIn).toEqual({});
     expect(transportTile.itemsOut).toEqual({});
     expect(transportTile.constructor.acceptItems).toEqual({ '*': 20 });
