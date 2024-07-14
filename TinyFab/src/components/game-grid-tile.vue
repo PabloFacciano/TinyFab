@@ -1,11 +1,14 @@
 <template>
   <div 
-    class="p-2 flex items-center justify-center select-none"
+    class="p-2 flex justify-center select-none"
     :style="this.style"
     @mousedown="onCellClick"
   >
-    <div :class="selected" >
-      <img v-if="this.icon" :style="customImageStyle" :src="this.icon" alt="icon">
+    <div :class="selected" class="rounded overflow-hidden">
+      <img v-if="this.icon" :style="customImageStyle" class="w-auto m-auto" draggable="false" :src="this.icon" alt="icon">
+      <div v-for="progressBar in this.progressBars ?? []" :key="progressBar.name" class="w-full bg-gray-200/40 dark:bg-gray-700/40" :style="{ 'height': (20 / (this.progressBars.length)).toFixed(1) + '%'}">
+        <div class="bg-blue-600 h-full" :style="{width: progressBar.value + '%'}"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -38,19 +41,41 @@ export default {
   computed: {
     customImageStyle(){
       if (!this.tile) return;
+      let style = {};
 
       if (this.tile.type == 'transport'){
         if (this.tile.state.direction == 'left'){
-          return { 'transform': 'scaleX(-1)' }
+          style.transform = 'scaleX(-1)';
         } else if (this.tile.state.direction == 'right'){
-          return { 'transform': 'scaleX(1)' }
+          style.transform = 'scaleX(1)';
         } else if (this.tile.state.direction == 'up'){
-          return { 'transform': 'rotate(-90deg)' }
+          style.transform = 'rotate(-90deg)';
         } else if (this.tile.state.direction == 'down'){
-          return { 'transform': 'rotate(90deg)' }
+          style.transform = 'rotate(90deg)';
         } 
       }
 
+      if (this.progressBars.length > 0){
+        style.height = '80%';
+      }
+
+      return style;
+    },
+    progressBars(){
+      let progressBars = [];
+
+      if (this.tile.type == 'nature'){
+        progressBars.push({
+          name: 'generation',
+          value: ((this.tile.state.ticksRunning * 100) / this.tile.state.generation.ticks).toFixed(0)
+        })
+        progressBars.push({
+          name: 'capacity',
+          value: ((this.tile.itemList[this.tile.state.generation.resource] * 100) / this.tile.capacity).toFixed(0)
+        })
+      }
+
+      return progressBars;
     },
     elevation(){
       return this.terrain?.elevation ?? 50;
@@ -78,6 +103,7 @@ export default {
         let hexOpacity = interpolateOpacity(0, 35);
         obj[`background-color`] = `#063d73${hexOpacity}`; // azul
       }
+
       
       return obj;
     },
