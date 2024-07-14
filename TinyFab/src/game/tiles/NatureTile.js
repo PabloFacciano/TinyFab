@@ -8,7 +8,7 @@ export default class NatureTile extends Tile {
     this.state = {
       generation: {
         resource: NatureTile.randomResource(),
-        ticks: NatureTile.randomNumber(5, 15),
+        ticks: NatureTile.randomNumber(200, 600),
         ammount: NatureTile.randomNumber(1, 3)
       },
       ticksRunning: 0
