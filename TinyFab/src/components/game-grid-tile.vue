@@ -93,11 +93,12 @@ export default {
         iron: 'https://img.icons8.com/color-glass/48/rock.png',
         factory: 'https://img.icons8.com/color/48/factory.png',
         market: 'https://img.icons8.com/color/48/shopping-basket-2.png',
-        question: 'https://img.icons8.com/color/100/question-mark.png'
+        question: 'https://img.icons8.com/color/48/question-mark.png',
+        shop: 'https://img.icons8.com/color/48/shop.png'
       };
 
       if (this.tile.iconCategory in icons){
-        return icons[this.tile.icon]
+        return icons[this.tile.iconCategory]
       }
 
       if (this.tile.iconCategory == 'nature' && this.tile.state.generation.resource in icons){

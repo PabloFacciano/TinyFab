@@ -5,6 +5,7 @@ import PerlinNoise from '../game/PerlinNoise';
 
 import NatureTile from '../game/tiles/NatureTile';
 import TransportTile from '../game/tiles/TransportTile';
+import ShopTile from '../game/tiles/ShopTile';
 
 export const useGameStore = defineStore('game', {
   state: () => ({
@@ -68,6 +69,8 @@ export const useGameStore = defineStore('game', {
         newTile = new NatureTile(this.world, location);
       } else if (block.type == 'transport'){
         newTile = new TransportTile(this.world, location);
+      } else if (block.type == 'shop'){
+        newTile = new ShopTile(this.world, location);
       }
 
       newTile.location = location;

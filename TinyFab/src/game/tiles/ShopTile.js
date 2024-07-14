@@ -1,8 +1,10 @@
 import { Tile } from './Tile';
 
-export class ShopTile extends Tile {
+export default class ShopTile extends Tile {
   constructor(world, location) {
     super(world, location);
+    this.type = 'shop';
+    this.iconCategory = 'shop';
     this.state = {
       pricingList: {
         wood: 5,
@@ -11,10 +13,6 @@ export class ShopTile extends Tile {
         iron: 15
       }
     };
-  }
-
-  static get type() {
-    return 'shop';
   }
 
   static get cost() {

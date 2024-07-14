@@ -62,6 +62,23 @@
           }
         ],
         tileTypes: {
+          'shop': {
+            name: 'Shop',
+            properties: [
+              {
+                label: 'Pricing List',
+                info: 'Prices of items',
+                value: (t) => {
+                  let text = '';
+                  for (const price of Object.keys(t.state.pricingList)) {
+                    text += `${price}: ${t.state.pricingList[price]} | `
+                  }
+                  return text;
+                },
+                onPropertyValueClick: () => {}
+              }
+            ]
+          },
           'nature' : {
             name: 'Nature',
             properties: [

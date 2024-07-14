@@ -10,11 +10,7 @@ export default class TransportTile extends Tile {
     };
     this.iconCategory = 'transport';
   }
-
-  static get type() {
-    return 'transport';
-  }
-
+  
   static get cost() {
     return 250;
   }
@@ -23,6 +19,21 @@ export default class TransportTile extends Tile {
     return {
       '*': 20
     };
+  }
+  
+  updateItemsOut(){
+    const combined = { ...this.itemsIn };
+
+    for (const [key, value] of Object.entries(this.itemsOut)) {
+      if (combined[key] != null) {
+        combined[key] += value;
+      } else {
+        combined[key] = value;
+      }
+    }
+  
+    this.itemsOut = combined;
+    this.itemsIn = {};
   }
 
   update() {
@@ -59,6 +70,8 @@ export default class TransportTile extends Tile {
     }
 
     this.acceptInputs();
+    this.updateItemsOut();
+    expect(true).toBe(False) // No descarga bien esta cosa y por lo tanto no vende
   }
 }
 

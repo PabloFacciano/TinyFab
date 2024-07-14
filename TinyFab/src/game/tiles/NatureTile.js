@@ -19,10 +19,6 @@ export default class NatureTile extends Tile {
     };
   }
 
-  static get type() {
-    return 'nature';
-  }
-
   static get cost() {
     return 1000;
   }

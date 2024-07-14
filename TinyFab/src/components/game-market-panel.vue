@@ -40,6 +40,11 @@ export default {
           type: 'transport',
           label: 'Transport',
           icon: 'https://img.icons8.com/color/48/truck--v1.png'
+        },
+        {
+          type: 'shop',
+          label: 'Shop',
+          icon: 'https://img.icons8.com/color/48/shop.png'
         }
       ]
     }
