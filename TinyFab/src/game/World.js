@@ -6,6 +6,7 @@ class World {
         this.perlinNoise = perlinNoise;
         this.terrain = [];
         this.tiles = [];
+        this.cash = 100;
     }
     create(width, height) {
 
