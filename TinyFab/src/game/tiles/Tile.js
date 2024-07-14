@@ -52,10 +52,15 @@ export class Tile {
 
       if (neighborTile) {
         for (let item in neighborTile.itemsOut) {
-          if (this.constructor.acceptItems[item]) {
-            const transferAmount = Math.min(
+          if (this.constructor.acceptItems[item] || this.constructor.acceptItems['*']) {
+            let maxItems = this.constructor.acceptItems[item];
+            if (!maxItems){
+              maxItems = this.constructor.acceptItems['*'];
+            }
+
+            let transferAmount = Math.min(
               neighborTile.itemsOut[item],
-              this.constructor.acceptItems[item] - (this.itemsIn[item] || 0)
+              maxItems - (this.itemsIn[item] || 0)
             );
 
             if (transferAmount > 0) {

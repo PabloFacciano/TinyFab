@@ -20,7 +20,9 @@ export default class TransportTile extends Tile {
   }
 
   static get acceptItems() {
-    return {};
+    return {
+      '*': 20
+    };
   }
 
   update() {
@@ -55,6 +57,8 @@ export default class TransportTile extends Tile {
       this.location = { x: nextLocation.x, y: nextLocation.y };
       this.world.tiles[nextLocation.x][nextLocation.y] = this;
     }
+
+    this.acceptInputs();
   }
 }
 
