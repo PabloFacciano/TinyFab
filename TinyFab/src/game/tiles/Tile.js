@@ -51,7 +51,7 @@ export class Tile {
     // Update near tiles
     adjacentTiles.forEach(t => {
       // Sólo procesar si hay algo en itemsOut
-      Object.keys(t.itemsOut ?? []).forEach(itemKey => {
+      Object.keys(t.itemsOut ?? {}).forEach(itemKey => {
 
         // si el item no está en acceptItems, saltar
         if (!this.acceptItems.includes(itemKey)) return;
@@ -74,7 +74,7 @@ export class Tile {
         // nuevo inventario - el existente
         this.itemsIn[itemKey] = newItemCount - (this.itemsOut[itemKey] ?? 0);
         // resto para la celda que da items
-        adjacentTiles[itemKey] = restAdjacent;
+        t.itemsOut[itemKey] = restAdjacent;
 
       })
     });
