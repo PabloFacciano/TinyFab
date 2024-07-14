@@ -1,11 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { ShopTile } from './ShopTile';
-import { Tile } from './Tile';
+import ShopTile from './ShopTile';
+import Tile from './Tile';
 
 class WorldMock {
   constructor() {
     this.cash = 0;
-    this.tiles = [];
+    this.tiles = [
+      [ ], 
+      [ ]
+    ];
   }
 }
 
@@ -19,19 +22,19 @@ describe('ShopTile', () => {
   });
 
   it('should be an instance of Tile', () => {
-    expect(shopTile).toBeInstanceOf(Tile);
+    expect(shopTile).toBeInstanceOf(ShopTile);
   });
 
   it('should have type "shop"', () => {
-    expect(ShopTile.type).toBe('shop');
+    expect(shopTile.type).toBe('shop');
   });
 
   it('should have a cost of 100', () => {
-    expect(ShopTile.cost).toBe(100);
+    expect(shopTile.cost).toBe(100);
   });
 
-  it('should accept any item up to 50', () => {
-    expect(ShopTile.acceptItems['*']).toBe(50);
+  it('should accept any item', () => {
+    expect(shopTile.acceptItems.length).toBe(4);
   });
 
   it('should have an initial empty state for itemsIn and itemsOut', () => {

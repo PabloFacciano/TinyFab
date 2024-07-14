@@ -17,11 +17,11 @@ describe('TransportTile', () => {
   });
 
   it('should initialize with correct properties', () => {
-    expect(transportTile.constructor.type).toBe('transport');
-    expect(transportTile.constructor.cost).toEqual(250);
+    expect(transportTile.type).toBe('transport');
+    expect(transportTile.cost).toEqual(250);
     expect(transportTile.itemsIn).toEqual({});
     expect(transportTile.itemsOut).toEqual({});
-    expect(transportTile.constructor.acceptItems).toEqual({ '*': 20 });
+    expect(transportTile.acceptItems).toEqual([ 'wood', 'iron', 'stone', 'coal']);
     expect(transportTile.state).toEqual({
       direction: 'right',
       onBlockTurn: 'back'

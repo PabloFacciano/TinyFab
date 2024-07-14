@@ -25,8 +25,8 @@
       
       <div class="text-sm mb-2">Items</div>
       <table class="bg-neutral-700 table-fixed border-collapse text-start w-full mb-3">
-        <tr v-for="(value, name) in this.tile.itemList" :key="name">
-          <td class="bg-neutral-900 px-3 py-1">{{ name }}</td>
+        <tr v-for="(value, key) in this.tile.itemList" :key="key">
+          <td class="bg-neutral-900 px-3 py-1">{{ key }}</td>
           <td class="px-3 py-1">{{ value }}</td>
         </tr>
       </table>
@@ -91,7 +91,7 @@
               {
                 label: 'Capacity',
                 info: 'Maximum amount of resources to be generated.',
-                value: (t) => t.state.generation.capacity,
+                value: (t) => t.capacity,
                 onPropertyValueClick: () => {}
               },
               {

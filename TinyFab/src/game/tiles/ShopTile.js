@@ -13,17 +13,14 @@ export default class ShopTile extends Tile {
         iron: 15
       }
     };
+    this.cost = 100;
+    this.acceptItems = [ 'wood', 'iron', 'stone', 'coal' ];
   }
 
-  static get cost() {
-    return 100;
-  }
-
-  static get acceptItems() {
-    return { '*': 50 };
-  }
 
   update() {
+    this.runItemsIn();
+
     const pricingList = this.state.pricingList;
     let totalCash = 0;
 

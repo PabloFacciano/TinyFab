@@ -12,11 +12,11 @@ describe('NatureTile', () => {
   });
 
   it('should have type "nature"', () => {
-    expect(natureTile.constructor.type).toBe('nature');
+    expect(natureTile.type).toBe('nature');
   });
 
   it('should have correct cost', () => {
-    expect(natureTile.constructor.cost).toEqual(1000);
+    expect(natureTile.cost).toEqual(1000);
   });
 
   it('should initialize with correct properties', () => {
@@ -24,7 +24,6 @@ describe('NatureTile', () => {
     expect(natureTile.state.generation).toHaveProperty('resource');
     expect(natureTile.state.generation).toHaveProperty('ticks');
     expect(natureTile.state.generation).toHaveProperty('ammount');
-    expect(natureTile.state.generation).toHaveProperty('capacity');
     expect(natureTile.state).toHaveProperty('ticksRunning', 0);
     expect(natureTile.itemsOut).toHaveProperty(natureTile.state.generation.resource, 0);
   });
@@ -38,10 +37,10 @@ describe('NatureTile', () => {
   });
 
   it('should not exceed generation capacity', () => {
-    const { resource, capacity } = natureTile.state.generation;
-    natureTile.itemsOut[resource] = capacity - 1;
+    const { resource } = natureTile.state.generation;
+    natureTile.itemsOut[resource] = natureTile.capacity - 1;
     natureTile.state.ticksRunning = natureTile.state.generation.ticks + 1;
     natureTile.update();
-    expect(natureTile.itemsOut[resource]).toBeLessThanOrEqual(capacity);
+    expect(natureTile.itemsOut[resource]).toBeLessThanOrEqual(natureTile.capacity);
   });
 });

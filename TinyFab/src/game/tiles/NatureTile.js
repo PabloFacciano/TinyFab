@@ -9,22 +9,16 @@ export default class NatureTile extends Tile {
       generation: {
         resource: NatureTile.randomResource(),
         ticks: NatureTile.randomNumber(5, 15),
-        ammount: NatureTile.randomNumber(1, 3),
-        capacity: NatureTile.randomNumber(10, 20)
+        ammount: NatureTile.randomNumber(1, 3)
       },
       ticksRunning: 0
     };
+    this.capacity = NatureTile.randomNumber(10, 20);
     this.itemsOut = { 
       [this.state.generation.resource]: 0 
     };
-  }
-
-  static get cost() {
-    return 1000;
-  }
-
-  static get acceptItems() {
-    return {};
+    this.cost = 1000;
+    this.acceptItems = [];
   }
 
   static randomResource() {
@@ -37,7 +31,7 @@ export default class NatureTile extends Tile {
   }
 
   update() {
-    const { resource, ticks, ammount, capacity } = this.state.generation;
+    const { resource, ticks, ammount } = this.state.generation;
     this.state.ticksRunning++;
 
     if (this.state.ticksRunning > ticks) {
@@ -45,8 +39,8 @@ export default class NatureTile extends Tile {
       this.state.ticksRunning = 0;
     }
 
-    if (this.itemsOut[resource] > capacity) {
-      this.itemsOut[resource] = capacity;
+    if (this.itemsOut[resource] > this.capacity) {
+      this.itemsOut[resource] = this.capacity;
     }
   }
 }

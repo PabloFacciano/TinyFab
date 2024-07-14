@@ -9,34 +9,13 @@ export default class TransportTile extends Tile {
       onBlockTurn: 'back'
     };
     this.iconCategory = 'transport';
+    this.capacity = 20;
+    this.cost = 250;
+    this.acceptItems = [ 'wood', 'iron', 'stone', 'coal']
   }
   
-  static get cost() {
-    return 250;
-  }
-
-  static get acceptItems() {
-    return {
-      '*': 20
-    };
-  }
   
-  updateItemsOut(){
-    const combined = { ...this.itemsIn };
-
-    for (const [key, value] of Object.entries(this.itemsOut)) {
-      if (combined[key] != null) {
-        combined[key] += value;
-      } else {
-        combined[key] = value;
-      }
-    }
-  
-    this.itemsOut = combined;
-    this.itemsIn = {};
-  }
-
-  update() {
+  doMovement(){
     let updateDirection = false;
     let nextLocation = { x: this.location.x, y: this.location.y };
 
@@ -68,10 +47,27 @@ export default class TransportTile extends Tile {
       this.location = { x: nextLocation.x, y: nextLocation.y };
       this.world.tiles[nextLocation.x][nextLocation.y] = this;
     }
+  }
 
-    this.acceptInputs();
+  updateItemsOut(){
+    const combined = { ...this.itemsIn };
+
+    for (const [key, value] of Object.entries(this.itemsOut)) {
+      if (combined[key] != null) {
+        combined[key] += value;
+      } else {
+        combined[key] = value;
+      }
+    }
+  
+    this.itemsOut = combined;
+    this.itemsIn = {};
+  }
+
+  update() {
+    this.doMovement();
+    this.runItemsIn();
     this.updateItemsOut();
-    expect(true).toBe(False) // No descarga bien esta cosa y por lo tanto no vende
   }
 }
 
