@@ -11,7 +11,6 @@ export class Tile {
     this.state = {};
     this.showBorder = false;
     this.empty = false;
-    this.tickProcessed = false;
   }
 
   static get type() {
