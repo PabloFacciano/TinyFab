@@ -164,6 +164,8 @@ export default {
         if (!this.gameStore.settings.animations){
           percentage = 0;
         }
+
+        percentage = -(50 - percentage);
           
 
         if (rotationDirection == 1){ // left
@@ -171,7 +173,7 @@ export default {
         } else if (rotationDirection == 2){ // right
           style.transform = `scaleX(1) translateX(${percentage}%)`;
         } else if (rotationDirection == 3){ // up
-          style.transform = ` translateY(-${percentage}%) rotate(-90deg)`;
+          style.transform = `rotate(-90deg) translateX(${percentage}%)`;
         } else if (rotationDirection == 4){ // down
           style.transform = `rotate(90deg) translateX(${percentage}%)`;
         } 
