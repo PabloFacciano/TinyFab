@@ -12,7 +12,10 @@ export const useGameStore = defineStore('game', {
     world: null,
     tool: 'select',
     selectedTile: null,
-    running: false
+    running: false,
+    settings: {
+      animations: false
+    }
   }),
   actions: {
     initializeWorld(width, height, expectedCount) {

@@ -22,10 +22,10 @@ describe('TransportTile', () => {
     expect(transportTile.itemsIn).toEqual({});
     expect(transportTile.itemsOut).toEqual({});
     expect(transportTile.acceptItems).toEqual([ 'wood', 'iron', 'stone', 'coal']);
-    expect(transportTile.state).toEqual({
-      direction: 'right',
-      onBlockTurn: 'back'
-    });
+    expect(transportTile.state.direction).toBe('right');
+    expect(transportTile.state.onBlockTurn).toBe('back');
+    expect(transportTile.state.timeRequired).toBeGreaterThanOrEqual(100);
+    expect(transportTile.state.lastMovement).toBeNull();
   });
 
   it('should move correctly according to the direction', () => {
@@ -36,12 +36,14 @@ describe('TransportTile', () => {
 
     // right
     transportTile.state.direction = 'right';
+    transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
     transportTile.update();
     expect(world.tiles[0][0].empty).toBe(true);;
     expect(world.tiles[1][0]).toEqual(transportTile);
 
     // down
     transportTile.state.direction = 'down';
+    transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
     transportTile.update();
     //console.log("Line 46: ", world.tiles[1][0])
     expect(world.tiles[1][0].empty).toBe(true);;
@@ -49,12 +51,14 @@ describe('TransportTile', () => {
 
     // left
     transportTile.state.direction = 'left';
+    transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
     transportTile.update();
     expect(world.tiles[1][1].empty).toBe(true);
     expect(world.tiles[0][1]).toEqual(transportTile);
 
     // up
     transportTile.state.direction = 'up';
+    transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
     transportTile.update();
     expect(world.tiles[0][1].empty).toBe(true);
     expect(world.tiles[0][0]).toEqual(transportTile);
@@ -86,6 +90,7 @@ describe('TransportTile', () => {
     // 8 because there are 4 directions
     for (let index = 0; index < 8; index++) {
       expect(world.tiles[1][1]).toBe(transportTile);
+      transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
       transportTile.update();
       expect(world.tiles[1][1]).toBe(transportTile);
     }
@@ -106,6 +111,7 @@ describe('TransportTile', () => {
     // 8 because there are 4 directions
     for (let index = 0; index < 8; index++) {
       expect(world.tiles[0][0]).toBe(transportTile);
+      transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
       transportTile.update();
       expect(world.tiles[0][0]).toBe(transportTile);
     }
@@ -145,6 +151,7 @@ describe('TransportTile', () => {
     transportTile.state.onBlockTurn = 'back';
     for (let direction in expected_onBlockTurn.back) {
       transportTile.state.direction = direction;
+      transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
       transportTile.update();
       expect(transportTile.state.direction).toBe(expected_onBlockTurn.back[direction]);
     }
@@ -153,6 +160,7 @@ describe('TransportTile', () => {
     transportTile.state.onBlockTurn = 'left';
     for (let direction in expected_onBlockTurn.left) {
       transportTile.state.direction = direction;
+      transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
       transportTile.update();
       expect(transportTile.state.direction).toBe(expected_onBlockTurn.left[direction]);
     }
@@ -161,8 +169,32 @@ describe('TransportTile', () => {
     transportTile.state.onBlockTurn = 'right';
     for (let direction in expected_onBlockTurn.right) {
       transportTile.state.direction = direction;
+      transportTile.state.lastMovement = Date.now() - transportTile.state.timeRequired - 500; // some margin
       transportTile.update();
       expect(transportTile.state.direction).toBe(expected_onBlockTurn.right[direction]);
     }
   });
+
+  it('should not move if it is before required time', () => {
+
+    expect(world.width).toBeGreaterThanOrEqual(3);
+    expect(world.height).toBeGreaterThanOrEqual(3);
+    transportTile.location = { x: 0, y: 0 };
+    transportTile.state.direction = 'right';
+    transportTile.state.timeRequired = 3000; // in miliseconds
+
+    // do not move before time required
+    transportTile.state.lastMovement = Date.now() - 1500;
+    transportTile.update();
+    expect(world.tiles[0][0]).toBe(transportTile);
+    expect(world.tiles[1][0].empty).toBe(true);
+
+    // move after time required
+    transportTile.state.lastMovement = Date.now() - 3500;
+    transportTile.update();
+    expect(world.tiles[0][0].empty).toBe(true);
+    expect(world.tiles[1][0]).toBe(transportTile);
+
+  });
+  
 });

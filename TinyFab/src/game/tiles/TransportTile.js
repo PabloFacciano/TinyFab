@@ -6,7 +6,10 @@ export default class TransportTile extends Tile {
     this.type = "transport";
     this.state = {
       direction: 'right',
-      onBlockTurn: 'back'
+      onBlockTurn: 'back',
+      timeRequired: randomNumber(200, 1200),
+      lastMovement: Date.now(),
+      percentMoved: 0
     };
     this.iconCategory = 'transport';
     this.capacity = 20;
@@ -16,6 +19,10 @@ export default class TransportTile extends Tile {
   
   
   doMovement(){
+
+    this.state.percentMoved = ((Date.now() - this.state.lastMovement) * 100) / this.state.timeRequired;
+    if (this.state.percentMoved < 100) return;
+
     let updateDirection = false;
     let nextLocation = { x: this.location.x, y: this.location.y };
 
@@ -46,6 +53,9 @@ export default class TransportTile extends Tile {
       
       this.location = { x: nextLocation.x, y: nextLocation.y };
       this.world.tiles[nextLocation.x][nextLocation.y] = this;
+      
+      this.state.percentMoved = 0;
+      this.state.lastMovement = Date.now();
     }
   }
 
@@ -90,4 +100,8 @@ const onBlockTurnResult = {
     left: 'up',
     up: 'right'
   }
+}
+
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
