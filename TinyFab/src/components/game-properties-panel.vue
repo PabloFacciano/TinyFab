@@ -144,6 +144,12 @@ export default {
                   t.state.onBlockTurn = 'left';
                 }
               }
+            },
+            {
+              label: 'Time Required',
+              info: 'Time (ms) required to move the transport from tile to tile.',
+              value: (t) => t.state.timeRequired,
+              onPropertyValueClick: (t) => {}
             }
           ]
         }
