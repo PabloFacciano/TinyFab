@@ -7,7 +7,7 @@ export default class TransportTile extends Tile {
     this.state = {
       direction: 'right',
       onBlockTurn: 'back',
-      timeRequired: randomNumber(200, 1200),
+      timeRequired: randomNumber(50, 600),
       lastMovement: Date.now(),
       percentMoved: 0
     };
