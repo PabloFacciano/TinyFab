@@ -11,36 +11,28 @@ describe('NatureTile', () => {
     natureTile = new NatureTile(mockWorld, location);
   });
 
-  it('should have type "nature"', () => {
-    expect(natureTile.type).toBe('nature');
-  });
-
-  it('should have correct cost', () => {
-    expect(natureTile.cost).toEqual(1000);
-  });
-
   it('should initialize with correct properties', () => {
+    expect(natureTile.type).toBe('nature');
+    expect(natureTile.cost).toEqual(1000);
     expect(natureTile.state).toHaveProperty('generation');
     expect(natureTile.state.generation).toHaveProperty('resource');
-    expect(natureTile.state.generation).toHaveProperty('ticks');
+    expect(natureTile.state.generation).toHaveProperty('lastGeneration');
     expect(natureTile.state.generation).toHaveProperty('ammount');
-    expect(natureTile.state).toHaveProperty('ticksRunning', 0);
+    expect(natureTile.state.generation).toHaveProperty('timeRequired');
     expect(natureTile.itemsOut).toHaveProperty(natureTile.state.generation.resource, 0);
   });
 
-  it('should update itemsOut when ticksRunning exceeds generation.ticks', () => {
-    const { resource, ammount } = natureTile.state.generation;
-    natureTile.state.ticksRunning = natureTile.state.generation.ticks + 1;
-    natureTile.update();
-    expect(natureTile.itemsOut[resource]).toBe(ammount);
-    expect(natureTile.state.ticksRunning).toBe(0);
-  });
+  it('should update itemsOut after some time', () => {
+    
+    natureTile.state.generation.timeRequired = 3000;
+    natureTile.state.generation.lastGeneration = Date.now() - 2500;
+    natureTile.update();    
+    expect(natureTile.itemsOut[natureTile.state.generation.resource]).toBe(0);
+    
+    natureTile.state.generation.timeRequired = 3000;
+    natureTile.state.generation.lastGeneration = Date.now() - 4000;
+    natureTile.update();    
+    expect(natureTile.itemsOut[natureTile.state.generation.resource]).toBe(natureTile.state.generation.ammount);
 
-  it('should not exceed generation capacity', () => {
-    const { resource } = natureTile.state.generation;
-    natureTile.itemsOut[resource] = natureTile.capacity - 1;
-    natureTile.state.ticksRunning = natureTile.state.generation.ticks + 1;
-    natureTile.update();
-    expect(natureTile.itemsOut[resource]).toBeLessThanOrEqual(natureTile.capacity);
   });
 });

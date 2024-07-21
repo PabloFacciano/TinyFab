@@ -7,13 +7,13 @@ export default class NatureTile extends Tile {
     this.iconCategory = 'nature';
     this.state = {
       generation: {
+        lastGeneration: Date.now(),
         resource: NatureTile.randomResource(),
-        ticks: NatureTile.randomNumber(200, 600),
-        ammount: NatureTile.randomNumber(1, 3)
-      },
-      ticksRunning: 0
+        timeRequired: randomNumber(1000, 10000),
+        ammount: randomNumber(1, 3)
+      }
     };
-    this.capacity = NatureTile.randomNumber(10, 20);
+    this.capacity = randomNumber(6, 15);
     this.itemsOut = { 
       [this.state.generation.resource]: 0 
     };
@@ -23,24 +23,26 @@ export default class NatureTile extends Tile {
 
   static randomResource() {
     const resources = ['wood', 'stone', 'coal', 'iron'];
-    return resources[Math.floor(Math.random() * resources.length)];
-  }
-
-  static randomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return resources[randomNumber(0, resources.length)];
   }
 
   update() {
-    const { resource, ticks, ammount } = this.state.generation;
-    this.state.ticksRunning++;
 
-    if (this.state.ticksRunning > ticks) {
-      this.itemsOut[resource] += ammount;
-      this.state.ticksRunning = 0;
+    let currentPassedTime = Date.now() - this.state.generation.lastGeneration;
+    if (currentPassedTime > this.state.generation.timeRequired){
+      this.state.generation.lastGeneration += this.state.generation.timeRequired;
+
+      // more resources
+      this.itemsOut[this.state.generation.resource] += this.state.generation.ammount;
+      if (this.itemsOut[this.state.generation.resource] > this.capacity) {
+        this.itemsOut[this.state.generation.resource] = this.capacity;
+      }
+
     }
 
-    if (this.itemsOut[resource] > this.capacity) {
-      this.itemsOut[resource] = this.capacity;
-    }
   }
+}
+
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
