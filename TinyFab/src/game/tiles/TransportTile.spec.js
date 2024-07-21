@@ -25,7 +25,7 @@ describe('TransportTile', () => {
     expect(transportTile.state.direction).toBe('right');
     expect(transportTile.state.onBlockTurn).toBe('back');
     expect(transportTile.state.timeRequired).toBeGreaterThanOrEqual(100);
-    expect(transportTile.state.lastMovement).toBeNull();
+    expect(transportTile.state.lastMovement).not.toBeNull();
   });
 
   it('should move correctly according to the direction', () => {
